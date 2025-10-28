@@ -22,3 +22,5 @@ matlab/data/
 *.avi
 
 # .vscode/
+
+.vscode/settings.json
