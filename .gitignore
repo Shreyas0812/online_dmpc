@@ -21,4 +21,4 @@ matlab/data/
 
 *.avi
 
-.vscode/
+# .vscode/
