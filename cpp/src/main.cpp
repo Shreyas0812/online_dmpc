@@ -21,6 +21,9 @@ int main() {
     string file = "../results/trajectories.txt";
     sim.saveDataToFile(file.c_str());
 
+    string file2 = "../../../SwarmSync/trajectories.txt";
+    sim.saveDataToFile(file2.c_str());
+    
 	return 0;
 }
 
