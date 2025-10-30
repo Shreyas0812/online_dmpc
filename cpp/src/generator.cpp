@@ -80,6 +80,11 @@ Generator::Generator(const Generator::Params& p) :
     // Create the avoider object for collision avoidance
     _avoider = std::make_unique<OndemandAvoider>(_oldhorizon, _Phi_pred.pos,
                                                  _A0_pred.pos, p.ellipse);
+    
+    // Initialize moving goals with final positions
+    _moving_goals.resize(_Ncmd);
+    for (int i = 0; i < _Ncmd; i++)
+        _moving_goals[i] = _pf.col(i);
 }
 
 void Generator::setErrorPenaltyMatrices(const TuningParams &p, const Eigen::MatrixXd &pf){
@@ -226,6 +231,11 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
 
     VectorXd err_pos, cost, denominator;
     for (int i = agents.front(); i <= agents.back(); i++) {
+
+        _moving_goals[i](2) += 0.1;
+
+        updateGoalCostTerms(i);
+
         // Pick initial condition for the reference
         _x0_ref[i] = getInitialReference(current_states[i], _x0_ref[i]);
 
@@ -379,4 +389,35 @@ MatrixXd Generator::updateInitialReference(const Eigen::VectorXd &u) {
         init_ref.col(r) =  _Rho_h[r].middleRows(_dim, _dim) * u;
 
     return init_ref;
+}
+
+void Generator::updateGoalCostTerms(int agent_id) {
+    VectorXd pfi = _moving_goals[agent_id];
+
+    // Case 1: no collisions in the horizon - go fast
+    MatrixXd S_free = MatrixXd::Zero(_dim * _k_hor, _dim * _k_hor);
+
+    int sdf_f = _k_hor;
+    double s_free = 100.0;
+
+    Ref<MatrixXd> block_f = S_free.block(_dim * (_k_hor - sdf_f), _dim * (_k_hor - sdf_f),
+                                         _dim * sdf_f, _dim * sdf_f);
+    
+    block_f = s_free * MatrixXd::Identity(_dim * sdf_f, _dim * sdf_f);
+
+    _fpf_free[agent_id] = pfi.replicate(_k_hor, 1).transpose() * S_free * _Phi_pred.pos;
+
+    // Case 2: collisions in the horizon - go slower
+    MatrixXd S_obs = MatrixXd::Zero(_dim * _k_hor, _dim * _k_hor);
+
+    int spd_o = _k_hor;
+    double s_obs = 100.0;
+
+    Ref<MatrixXd> block_o = S_obs.block(_dim * (_k_hor - spd_o), _dim * (_k_hor - spd_o),
+                                         _dim * spd_o, _dim * spd_o);
+
+    block_o = s_obs * MatrixXd::Identity(_dim * spd_o, _dim * spd_o);
+
+    _fpf_obs[agent_id] = pfi.replicate(_k_hor, 1).transpose() * S_obs * _Phi_pred.pos;
+
 }

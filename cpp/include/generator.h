@@ -5,11 +5,13 @@
 #ifndef ONLINE_PLANNING_GENERATOR_H
 #define ONLINE_PLANNING_GENERATOR_H
 
+#include <Eigen/Dense>
 #include "bezier.h"
 #include "model.h"
 #include "avoidance.h"
 #include "solver.h"
 #include <thread>
+#include <vector>
 
 typedef enum {
     kQpoases
@@ -111,6 +113,8 @@ private:
     std::vector<Eigen::RowVectorXd> _fpf_free;
     std::vector<Eigen::RowVectorXd> _fpf_obs;
 
+    std::vector<Eigen::VectorXd> _moving_goals;
+    
     // Horizon variables, one for solving and one for updating
     std::vector<Eigen::MatrixXd> _newhorizon;
     std::vector<Eigen::MatrixXd> _oldhorizon;
@@ -135,6 +139,8 @@ private:
 
     Eigen::MatrixXd updateHorizon(const Eigen::VectorXd& u, const State3D& states);
     Eigen::MatrixXd updateInitialReference(const Eigen::VectorXd& u);
+
+    void updateGoalCostTerms(int agent_id);
 };
 
 static Eigen::MatrixXd vec2mat(const Eigen::VectorXd& vec, int dim) {
