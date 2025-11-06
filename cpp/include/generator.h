@@ -53,6 +53,10 @@ public:
     // Public methods
     std::vector<Ellipse> getEllipses(){return _avoider->getEllipses();};
     std::vector<Eigen::MatrixXd> getNextInputs(const std::vector<State3D>& current_states);
+    std::vector<Eigen::MatrixXd> getNextGoals(){
+        return _next_goals;
+    };
+
 
 private:
     float _h;
@@ -127,6 +131,7 @@ private:
 
     // Next inputs for the agents, samples @ ts between to and to + h
     std::vector<Eigen::MatrixXd> _next_inputs;
+    std::vector<Eigen::MatrixXd> _next_goals;
 
     // Methods
     void initGenerator();

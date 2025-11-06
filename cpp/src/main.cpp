@@ -14,7 +14,7 @@ int main() {
 
     Simulator sim(my_config_file);
 
-    int T = 75; // simulation duration
+    int T = 25; // simulation duration
     sim.run(T);
 
     // Save data to file
@@ -23,6 +23,12 @@ int main() {
 
     string file2 = "../../../SwarmSync/trajectories.txt";
     sim.saveDataToFile(file2.c_str());
+
+    string goal_file = "../results/goals.txt";
+    sim.saveGoalDataToFile(goal_file.c_str());
+
+    string goal_file2 = "../../../SwarmSync/goals.txt";
+    sim.saveGoalDataToFile(goal_file2.c_str());
     
 	return 0;
 }
