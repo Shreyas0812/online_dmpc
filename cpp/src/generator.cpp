@@ -505,7 +505,7 @@ Eigen::VectorXd Generator::translatingMovement(int agent_id) {
     
     // Define translation velocity
     double translation_velocity_x = 0.02;  // Units per time step in x
-    double translation_velocity_y = 0.01;  // Units per time step in y
+    double translation_velocity_y = 0.00;  // Units per time step in y
     
     // Calculate current translation offset
     double offset_x = _time_step * translation_velocity_x;
