@@ -22,6 +22,7 @@ Simulator::Simulator(std::ifstream& config_file) {
     _pmax = p.mpc_params.limits.pmax;
     _current_states.reserve(_Ncmd);
     _trajectories.reserve(_Ncmd);
+    _goal_trajectories.reserve(_Ncmd);
 
     _ellipses = _generator->getEllipses();
 
@@ -139,6 +140,7 @@ void Simulator::run(int duration) {
     // Allocate the memory to record the trajectory of each agent
     for (int i = 0; i < _Ncmd; i++) {
         _trajectories.push_back(MatrixXd::Zero(_po.rows(), K));
+        _goal_trajectories.push_back(MatrixXd::Zero(_po.rows(), K));
     }
 
     // Calculate the amount of time steps to wait before running again the optimizer
@@ -163,6 +165,7 @@ void Simulator::run(int duration) {
             State3D sim_states = _sim_model->applyInput(_current_states[i], _inputs[i].col(count));
             _current_states[i] = addRandomNoise(sim_states);
             _trajectories[i].col(k) = _current_states[i].pos;
+            _goal_trajectories[i].col(k) = _current_states[i].vel;
         }
         count++;
     }
@@ -266,6 +269,27 @@ void Simulator::saveDataToFile(char const *pathAndName) {
 
         for(int i=0; i < _Ncmd; ++i)
             file << _trajectories[i] << endl;
+
+        file.close();  // close the file after finished
+    }
+
+    else
+    {
+        cerr << "Error while trying to open file" << endl;
+    }
+
+}
+
+void Simulator::saveGoalDataToFile(char const *pathAndName) {
+
+    ofstream file(pathAndName, ios::out | ios::trunc);
+    if(file)  // succeeded at opening the file
+    {
+        // instructions
+        cout << "Writing goals to text file..." << endl;
+
+        for(int i=0; i < _Ncmd; ++i)
+            file << _goal_trajectories[i] << endl;
 
         file.close();  // close the file after finished
     }

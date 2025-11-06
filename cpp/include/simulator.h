@@ -25,6 +25,7 @@ public:
 
     void run(int duration);
     void saveDataToFile(char const* pathAndName);
+    void saveGoalDataToFile(char const* goalPathAndName);
 
 private:
 
@@ -38,6 +39,7 @@ private:
     std::vector<Eigen::MatrixXd> _inputs;
     std::vector<State3D> _current_states;
     std::vector<Eigen::MatrixXd> _trajectories;
+    std::vector<Eigen::MatrixXd> _goal_trajectories;
     float _pos_std;
     float _vel_std;
     Eigen::MatrixXd _po;

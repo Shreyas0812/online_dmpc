@@ -23,6 +23,12 @@ int main() {
 
     string file2 = "../../../SwarmSync/trajectories.txt";
     sim.saveDataToFile(file2.c_str());
+
+    string goal_file = "../results/goals.txt";
+    sim.saveGoalDataToFile(goal_file.c_str());
+
+    string goal_file2 = "../../../SwarmSync/goals.txt";
+    sim.saveGoalDataToFile(goal_file2.c_str());
     
 	return 0;
 }
