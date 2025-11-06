@@ -44,6 +44,7 @@ public:
         MpcParams mpc_params;
         Eigen::MatrixXd po, pf;
         Solver solver_name;
+        std::string motion_type;
     };
 
     Generator(const Generator::Params& p);
@@ -66,6 +67,7 @@ private:
     int _deg_poly;
 
     Solver _solver_name;
+    std::string _motion_type;
 
     double _lin_coll;
     double _quad_coll;
@@ -114,6 +116,9 @@ private:
     std::vector<Eigen::RowVectorXd> _fpf_obs;
 
     std::vector<Eigen::VectorXd> _moving_goals;
+    std::vector<Eigen::VectorXd> _original_goals;
+
+    double _time_step;
     
     // Horizon variables, one for solving and one for updating
     std::vector<Eigen::MatrixXd> _newhorizon;
@@ -133,6 +138,11 @@ private:
 
     void solveCluster(const std::vector<State3D>& curr_states,
                        const std::vector<int>& agents);
+
+    // Goal movement functions
+    Eigen::VectorXd circularMovement(int agent_id);
+    Eigen::VectorXd circularMovementTranslatingAxis(int agent_id);
+    Eigen::VectorXd translatingMovement(int agent_id);
 
     QuadraticProblem buildQP(const Constraint& collision, const State3D& state,
                               int agent_id);

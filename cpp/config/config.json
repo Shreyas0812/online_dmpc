@@ -57,5 +57,11 @@
   "height_scaling_obs": 4.0,
 
   "std_position": 0.00228682,
-  "std_velocity": 0.0109302
+  "std_velocity": 0.0109302,
+
+
+
+  "motion_type1": "circular",
+  "motion_type2": "circular_translating",
+  "motion_type": "translating"   
 }

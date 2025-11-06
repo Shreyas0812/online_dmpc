@@ -94,6 +94,9 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     _pos_std = j["std_position"];
     _vel_std = j["std_velocity"];
 
+    // Motion type for goal movement
+    std::string motion_type = j.value("motion_type", "circular");
+
     // Generate the test
     std::string test_type =  j["test"];
     if (!test_type.compare("default")) {
@@ -124,7 +127,7 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     else throw std::invalid_argument("Invalid test type '" + test_type + " '");
 
     Generator::Params p = {_bezier_params, _model_params, ellipse_vec,
-                           _mpc_params, _po, _pf, qp_solver};
+                           _mpc_params, _po, _pf, qp_solver, motion_type};
     return p;
 }
 

@@ -3,6 +3,7 @@
 //
 #include "iostream"
 #include "generator.h"
+#include <cmath>
 
 using namespace std;
 using namespace Eigen;
@@ -27,6 +28,7 @@ Generator::Generator(const Generator::Params& p) :
     _po = p.po;
     _pf = p.pf;
     _solver_name = p.solver_name;
+    _motion_type = p.motion_type;
     _N = _po.cols();
     _Ncmd = _pf.cols();
     _fpf_free.reserve(_Ncmd);
@@ -83,8 +85,12 @@ Generator::Generator(const Generator::Params& p) :
     
     // Initialize moving goals with final positions
     _moving_goals.resize(_Ncmd);
-    for (int i = 0; i < _Ncmd; i++)
+    _original_goals.resize(_Ncmd);
+    _time_step = 0.0;
+    for (int i = 0; i < _Ncmd; i++) {
         _moving_goals[i] = _pf.col(i);
+        _original_goals[i] = _pf.col(i);  // Store original final positions
+    }
 }
 
 void Generator::setErrorPenaltyMatrices(const TuningParams &p, const Eigen::MatrixXd &pf){
@@ -219,6 +225,9 @@ std::vector<MatrixXd> Generator::getNextInputs(const vector<State3D>& current_st
     // Wait for all agents to solve the optimization
     for (int i = 0; i < _cluster.size(); ++i)
         _t[i].join();
+    // Increment time step for circular motion
+    _time_step += 1.0;
+    
 
     // Update the old horizon with the newhorizon for the next optimization
     _oldhorizon = _newhorizon;
@@ -232,8 +241,17 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
     VectorXd err_pos, cost, denominator;
     for (int i = agents.front(); i <= agents.back(); i++) {
         
-        // Move goals as required
-        _moving_goals[i](2) += 0.1;
+        // Update moving goals using selected movement function
+        if (_motion_type == "circular") {
+            _moving_goals[i] = circularMovement(i);
+        } else if (_motion_type == "circular_translating") {
+            _moving_goals[i] = circularMovementTranslatingAxis(i);
+        } else if (_motion_type == "translating") {
+            _moving_goals[i] = translatingMovement(i);
+        } else {
+            // Default to circular movement
+            _moving_goals[i] = circularMovement(i);
+        }
 
         updateGoalCostTerms(i);
 
@@ -421,4 +439,85 @@ void Generator::updateGoalCostTerms(int agent_id) {
 
     _fpf_obs[agent_id] = pfi.replicate(_k_hor, 1).transpose() * S_obs * _Phi_pred.pos;
 
+}
+
+Eigen::VectorXd Generator::circularMovement(int agent_id) {
+    // Circular motion about z-axis
+    double angular_velocity = 0.05;  // Radians per time step
+    
+    // Calculate radius from z-axis (distance from origin in x-y plane)
+    double radius = sqrt(_original_goals[agent_id](0) * _original_goals[agent_id](0) + 
+                       _original_goals[agent_id](1) * _original_goals[agent_id](1));
+    
+    // Calculate current angle from original position
+    double original_angle = atan2(_original_goals[agent_id](1), _original_goals[agent_id](0));
+    
+    // Calculate new angle with rotation
+    double angle = original_angle + _time_step * angular_velocity;
+    
+    // Create result vector
+    Eigen::VectorXd new_position(_dim);
+    
+    // Calculate circular motion about z-axis (z=0 plane)
+    new_position(0) = radius * cos(angle);  // X coordinate
+    new_position(1) = radius * sin(angle);  // Y coordinate
+    new_position(2) = _original_goals[agent_id](2);  // Z coordinate unchanged
+    
+    return new_position;
+}
+
+Eigen::VectorXd Generator::circularMovementTranslatingAxis(int agent_id) {
+    // Circular motion about translating z-axis
+    double angular_velocity = 0.05;  // Radians per time step
+    
+    // Define translation velocity of the rotation axis
+    double translation_velocity_x = 0.02;  // Units per time step in x
+    double translation_velocity_y = 0.01;  // Units per time step in y
+    
+    // Calculate current center of rotation (translating with time)
+    double center_x = _time_step * translation_velocity_x;
+    double center_y = _time_step * translation_velocity_y;
+    
+    // Calculate radius from the translating axis (distance from moving center in x-y plane)
+    double relative_x = _original_goals[agent_id](0) - center_x;
+    double relative_y = _original_goals[agent_id](1) - center_y;
+    double radius = sqrt(relative_x * relative_x + relative_y * relative_y);
+    
+    // Calculate current angle from original position relative to moving center
+    double original_angle = atan2(relative_y, relative_x);
+    
+    // Calculate new angle with rotation
+    double angle = original_angle + _time_step * angular_velocity;
+    
+    // Create result vector
+    Eigen::VectorXd new_position(_dim);
+    
+    // Calculate circular motion about the translating z-axis
+    new_position(0) = center_x + radius * cos(angle);  // X coordinate
+    new_position(1) = center_y + radius * sin(angle);  // Y coordinate
+    new_position(2) = _original_goals[agent_id](2);  // Z coordinate unchanged
+    
+    return new_position;
+}
+
+Eigen::VectorXd Generator::translatingMovement(int agent_id) {
+    // Simple translation without rotation
+    
+    // Define translation velocity
+    double translation_velocity_x = 0.02;  // Units per time step in x
+    double translation_velocity_y = 0.01;  // Units per time step in y
+    
+    // Calculate current translation offset
+    double offset_x = _time_step * translation_velocity_x;
+    double offset_y = _time_step * translation_velocity_y;
+    
+    // Create result vector
+    Eigen::VectorXd new_position(_dim);
+    
+    // Simply translate the original goal position
+    new_position(0) = _original_goals[agent_id](0) + offset_x;  // X coordinate
+    new_position(1) = _original_goals[agent_id](1) + offset_y;  // Y coordinate
+    new_position(2) = _original_goals[agent_id](2);  // Z coordinate unchanged
+    
+    return new_position;
 }

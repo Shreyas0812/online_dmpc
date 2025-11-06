@@ -69,5 +69,11 @@
 
 // Standard deviation of position and velocity measurements from a motion capture system, in meters
   "std_position": 0.00228682,
-  "std_velocity": 0.0109302
+  "std_velocity": 0.0109302,
+
+// Motion type for goal movement during simulation
+  "motion_type": "circular"     // Options: "circular" - circular motion about z-axis
+                               //          "circular_translating" - circular motion about translating z-axis
+                               //          "translating" - simple linear translation without rotation
+                               //          (defaults to "circular" if not specified)
 }
