@@ -37,6 +37,7 @@ private:
     std::unique_ptr<DoubleIntegrator3D> _sim_model;
     std::vector<Ellipse> _ellipses;
     std::vector<Eigen::MatrixXd> _inputs;
+    std::vector<Eigen::MatrixXd> _goals;
     std::vector<State3D> _current_states;
     std::vector<Eigen::MatrixXd> _trajectories;
     std::vector<Eigen::MatrixXd> _goal_trajectories;

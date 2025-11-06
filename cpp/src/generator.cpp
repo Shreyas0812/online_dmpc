@@ -200,6 +200,7 @@ void Generator::initClusters() {
 void Generator::initGenerator() {
     _x0_ref.reserve(_N);
     _next_inputs.reserve(_N);
+    _next_goals.reserve(_N);
     _newhorizon.reserve(_N);
     _oldhorizon.reserve(_N);
     MatrixXd pos_aux = MatrixXd::Zero(_dim, _k_hor);
@@ -212,6 +213,7 @@ void Generator::initGenerator() {
         _x0_ref.push_back(init_ref);
         _oldhorizon.push_back(poi.replicate(1, _k_hor));
         _next_inputs.push_back(poi.replicate(1, _h / _Ts));
+        _next_goals.push_back(poi.replicate(1, _h / _Ts));
     }
     _newhorizon = _oldhorizon;
 }
@@ -317,6 +319,9 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
 //            duration = duration_cast<microseconds>( t2 - t1 ).count();
 //            cout << "Time updating next input sequence = "
 //                 << duration/1000.0 << "ms" << endl << endl;
+            
+            // Update the next goal sequence for agent i
+            _next_goals[i] = _moving_goals[i].replicate(1, _h / _Ts);
         }
         else {
             // QP failed - repeat previous solution
