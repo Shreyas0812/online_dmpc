@@ -231,7 +231,8 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
 
     VectorXd err_pos, cost, denominator;
     for (int i = agents.front(); i <= agents.back(); i++) {
-
+        
+        // Move goals as required
         _moving_goals[i](2) += 0.1;
 
         updateGoalCostTerms(i);
