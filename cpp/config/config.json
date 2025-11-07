@@ -61,7 +61,8 @@
 
 
 
+  "motion_type": "circular_translating",
   "motion_type1": "circular",
-  "motion_type2": "circular_translating",
-  "motion_type": "translating"   
+  "motion_type2": "static",
+  "motion_type3": "translating"
 }

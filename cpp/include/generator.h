@@ -122,7 +122,8 @@ private:
     std::vector<Eigen::VectorXd> _moving_goals;
     std::vector<Eigen::VectorXd> _original_goals;
 
-    double _time_step;
+    double _current_time;
+    TuningParams _tuning_params;
     
     // Horizon variables, one for solving and one for updating
     std::vector<Eigen::MatrixXd> _newhorizon;
@@ -145,9 +146,9 @@ private:
                        const std::vector<int>& agents);
 
     // Goal movement functions
-    Eigen::VectorXd circularMovement(int agent_id);
-    Eigen::VectorXd circularMovementTranslatingAxis(int agent_id);
-    Eigen::VectorXd translatingMovement(int agent_id);
+    // Helper functions for moving goals
+    Eigen::VectorXd computeGoalPosition(int agent_id, double time);
+    Eigen::MatrixXd computeGoalTrajectory(int agent_id, double start_time, int num_samples);
 
     QuadraticProblem buildQP(const Constraint& collision, const State3D& state,
                               int agent_id);

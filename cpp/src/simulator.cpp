@@ -250,7 +250,7 @@ State3D Simulator::addRandomNoise(const State3D &states) {
         else
             sample = distribution_velocity(gen);
 
-        // state_vector[i] += sample;
+        state_vector[i] += sample;
     }
 
     State3D result = {state_vector.segment(0, 3), state_vector.segment(3, 3)};
