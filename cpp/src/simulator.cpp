@@ -167,6 +167,8 @@ void Simulator::run(int duration) {
             _current_states[i] = addRandomNoise(sim_states);
             _trajectories[i].col(k) = _current_states[i].pos;
             _goal_trajectories[i].col(k) = _goals[i];
+            
+            // cout << "_goals[" << i << "] = " << _goals[i].transpose() << endl;
         }
         count++;
     }
@@ -248,7 +250,7 @@ State3D Simulator::addRandomNoise(const State3D &states) {
         else
             sample = distribution_velocity(gen);
 
-        state_vector[i] += sample;
+        // state_vector[i] += sample;
     }
 
     State3D result = {state_vector.segment(0, 3), state_vector.segment(3, 3)};

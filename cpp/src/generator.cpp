@@ -221,6 +221,22 @@ void Generator::initGenerator() {
 
 std::vector<MatrixXd> Generator::getNextInputs(const vector<State3D>& current_states) {
 
+    for (int i = 0; i < _Ncmd; i++)
+    {
+        if (_motion_type == "circular") {
+            _moving_goals[i] = circularMovement(i);
+        } else if (_motion_type == "circular_translating") {
+            _moving_goals[i] = circularMovementTranslatingAxis(i);
+        } else if (_motion_type == "translating") {
+            _moving_goals[i] = translatingMovement(i);
+        } else {
+            // Default to circular movement
+            _moving_goals[i] = circularMovement(i);
+        }
+        // _moving_goals[i] = _pf[i];
+        // std::cout << "moving_goal[" << i << "] = " << _moving_goals[i].transpose() << std::endl;
+    }
+        
     // Launch all the threads to get the next set of inputs
     for (int i = 0; i < _cluster.size(); i++)
         _t[i] = std::thread(&Generator::solveCluster, this, ref(current_states), _cluster[i]);
@@ -242,19 +258,7 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
                               const std::vector<int> &agents) {
 
     VectorXd err_pos, cost, denominator;
-    for (int i = agents.front(); i <= agents.back(); i++) {
-        
-        // Update moving goals using selected movement function
-        if (_motion_type == "circular") {
-            _moving_goals[i] = circularMovement(i);
-        } else if (_motion_type == "circular_translating") {
-            _moving_goals[i] = circularMovementTranslatingAxis(i);
-        } else if (_motion_type == "translating") {
-            _moving_goals[i] = translatingMovement(i);
-        } else {
-            // Default to circular movement
-            _moving_goals[i] = circularMovement(i);
-        }
+    for (int i = agents.front(); i <= agents.back(); i++) {       
 
         updateGoalCostTerms(i);
 
@@ -323,6 +327,7 @@ void Generator::solveCluster(const std::vector<State3D> &current_states,
             
             // Update the next goal sequence for agent i
             _next_goals[i] = _moving_goals[i];
+            // std::cout << "moving_goal[" << i << "] = " << _moving_goals[i].transpose() << std::endl;
         }
         else {
             // QP failed - repeat previous solution
@@ -423,7 +428,7 @@ void Generator::updateGoalCostTerms(int agent_id) {
     MatrixXd S_free = MatrixXd::Zero(_dim * _k_hor, _dim * _k_hor);
 
     int sdf_f = _k_hor;
-    double s_free = 100.0;
+    double s_free = 50.0;
 
     Ref<MatrixXd> block_f = S_free.block(_dim * (_k_hor - sdf_f), _dim * (_k_hor - sdf_f),
                                          _dim * sdf_f, _dim * sdf_f);
@@ -436,7 +441,7 @@ void Generator::updateGoalCostTerms(int agent_id) {
     MatrixXd S_obs = MatrixXd::Zero(_dim * _k_hor, _dim * _k_hor);
 
     int spd_o = _k_hor;
-    double s_obs = 100.0;
+    double s_obs = 50.0;
 
     Ref<MatrixXd> block_o = S_obs.block(_dim * (_k_hor - spd_o), _dim * (_k_hor - spd_o),
                                          _dim * spd_o, _dim * spd_o);

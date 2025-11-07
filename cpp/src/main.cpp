@@ -14,7 +14,7 @@ int main() {
 
     Simulator sim(my_config_file);
 
-    int T = 25; // simulation duration
+    int T = 75; // simulation duration
     sim.run(T);
 
     // Save data to file
