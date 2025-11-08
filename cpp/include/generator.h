@@ -57,6 +57,9 @@ public:
         return _next_goals;
     };
 
+    void setGoalRegion(int agent_id, const Eigen::VectorXd& center, double radius);
+    void setGoalPoint(int agent_id, const Eigen::VectorXd& point);
+
 
 private:
     float _h;
@@ -133,6 +136,14 @@ private:
     // Next inputs for the agents, samples @ ts between to and to + h
     std::vector<Eigen::MatrixXd> _next_inputs;
     std::vector<Eigen::MatrixXd> _next_goals;
+
+    struct GoalRegion {
+        Eigen::VectorXd center;
+        double radius;
+        bool is_region;
+    };
+
+    std::vector<GoalRegion> _goal_regions;
 
     // Methods
     void initGenerator();

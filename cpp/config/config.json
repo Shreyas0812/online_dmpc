@@ -60,9 +60,10 @@
   "std_velocity": 0.0109302,
 
 
-
   "motion_type": "circular_translating",
+
   "motion_type1": "circular",
-  "motion_type2": "static",
-  "motion_type3": "translating"
+  "motion_type2": "translating",
+  "motion_type3": "circular_translating",
+  "motion_type4": "static"
 }

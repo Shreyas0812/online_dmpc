@@ -94,6 +94,14 @@ Generator::Generator(const Generator::Params& p) :
 
     // Store tuning parameters for dynamic goal updates
     _tuning_params = p.mpc_params.tuning;
+
+    _goal_regions.resize(_Ncmd);
+    for (int i = 0; i < _Ncmd; i++) {
+        _goal_regions[i].center = _pf.col(i);
+        _goal_regions[i].radius = 0.5;
+        _goal_regions[i].is_region = true;
+    }
+
 }
 
 void Generator::setErrorPenaltyMatrices(const TuningParams &p, const Eigen::MatrixXd &pf){
@@ -435,6 +443,64 @@ void Generator::updateGoalCostTerms(int agent_id) {
         predicted_goals.segment(_dim * k, _dim) = future_goal;
     }
 
+    // Determine penalty weights based on goal region
+    double s_free_scaled = _tuning_params.s_free;
+    double s_obs_scaled = _tuning_params.s_obs;
+
+    if (_goal_regions[agent_id].is_region) {
+        // Check current distance to goal region center
+        VectorXd current_goal_center = predicted_goals.segment(0, _dim);
+        
+        // Get current predicted position (if available, otherwise use current state)
+        VectorXd current_predicted_pos;
+        if (_newhorizon[agent_id].cols() > 0) {
+            current_predicted_pos = _newhorizon[agent_id].col(0);
+        } else {
+            // Use the first predicted goal as fallback
+            current_predicted_pos = current_goal_center;
+        }
+        
+        double dist_to_center = (current_predicted_pos - current_goal_center).norm();
+        
+        if (dist_to_center <= _goal_regions[agent_id].radius) {
+            // Inside the region - reduce goal tracking penalty significantly
+            // This allows the agent to "relax" once inside
+            s_free_scaled *= 0.1;  // 10% of normal penalty
+            s_obs_scaled *= 0.1;
+            
+            // Optional: Keep goals as-is (no projection needed when inside)
+        } else {
+            // Outside region - project each predicted goal onto sphere surface
+            // This creates a "funnel" effect guiding the agent to the surface
+            for (int k = 0; k < _k_hor; k++) {
+                VectorXd future_goal_center = predicted_goals.segment(_dim * k, _dim);
+                
+                // Get predicted position at this time step
+                VectorXd predicted_pos_k;
+                if (k < _newhorizon[agent_id].cols()) {
+                    predicted_pos_k = _newhorizon[agent_id].col(k);
+                } else {
+                    predicted_pos_k = future_goal_center;
+                }
+                
+                // Project the predicted position onto the sphere surface
+                VectorXd direction = predicted_pos_k - future_goal_center;
+                double dist = direction.norm();
+                
+                if (dist > 1e-6) {  // Avoid division by zero
+                    VectorXd projected_goal = future_goal_center + 
+                                             _goal_regions[agent_id].radius * (direction / dist);
+                    predicted_goals.segment(_dim * k, _dim) = projected_goal;
+                } else {
+                    // Agent is at center, project to arbitrary point on sphere
+                    VectorXd arbitrary_projection = future_goal_center;
+                    arbitrary_projection(0) += _goal_regions[agent_id].radius;
+                    predicted_goals.segment(_dim * k, _dim) = arbitrary_projection;
+                }
+            }
+        }
+    }
+
     // Case 1: no collisions in the horizon - go fast
     MatrixXd S_free = MatrixXd::Zero(_dim * _k_hor, _dim * _k_hor);
     
@@ -443,7 +509,7 @@ void Generator::updateGoalCostTerms(int agent_id) {
                                          _dim * _tuning_params.spd_f, 
                                          _dim * _tuning_params.spd_f);
     
-    block_f = _tuning_params.s_free * MatrixXd::Identity(_dim * _tuning_params.spd_f, 
+    block_f = s_free_scaled * MatrixXd::Identity(_dim * _tuning_params.spd_f, 
                                                           _dim * _tuning_params.spd_f);
 
     _fpf_free[agent_id] = predicted_goals.transpose() * S_free * _Phi_pred.pos;
@@ -456,7 +522,7 @@ void Generator::updateGoalCostTerms(int agent_id) {
                                         _dim * _tuning_params.spd_o, 
                                         _dim * _tuning_params.spd_o);
 
-    block_o = _tuning_params.s_obs * MatrixXd::Identity(_dim * _tuning_params.spd_o, 
+    block_o = s_obs_scaled * MatrixXd::Identity(_dim * _tuning_params.spd_o, 
                                                         _dim * _tuning_params.spd_o);
 
     _fpf_obs[agent_id] = predicted_goals.transpose() * S_obs * _Phi_pred.pos;
@@ -486,6 +552,8 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
         new_position(0) = radius * cos(angle);  // X coordinate
         new_position(1) = radius * sin(angle);  // Y coordinate
         new_position(2) = _original_goals[agent_id](2);  // Z coordinate unchanged
+
+        _goal_regions[agent_id].center = new_position;
         
         return new_position;
     }
@@ -519,6 +587,8 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
         new_position(0) = center_x + radius * cos(angle);
         new_position(1) = center_y + radius * sin(angle);
         new_position(2) = _original_goals[agent_id](2);
+
+        _goal_regions[agent_id].center = new_position;
         
         return new_position;
     } 
@@ -538,6 +608,8 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
         new_position(0) = _original_goals[agent_id](0) + offset_x;
         new_position(1) = _original_goals[agent_id](1) + offset_y;
         new_position(2) = _original_goals[agent_id](2);
+
+        _goal_regions[agent_id].center = new_position;
         
         return new_position;
     }
@@ -560,3 +632,18 @@ MatrixXd Generator::computeGoalTrajectory(int agent_id, double start_time, int n
     return goal_trajectory;
 }
 
+void Generator::setGoalRegion(int agent_id, const Eigen::VectorXd& center, double radius) {
+    if (agent_id >= 0 && agent_id < _Ncmd) {
+        _goal_regions[agent_id].center = center;
+        _goal_regions[agent_id].radius = radius;
+        _goal_regions[agent_id].is_region = true;
+    }
+}
+
+void Generator::setGoalPoint(int agent_id, const Eigen::VectorXd& point) {
+    if (agent_id >= 0 && agent_id < _Ncmd) {
+        _goal_regions[agent_id].center = point;
+        _goal_regions[agent_id].radius = 0.0;
+        _goal_regions[agent_id].is_region = false;
+    }
+}
