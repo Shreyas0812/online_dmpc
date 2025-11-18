@@ -98,7 +98,7 @@ Generator::Generator(const Generator::Params& p) :
     _goal_regions.resize(_Ncmd);
     for (int i = 0; i < _Ncmd; i++) {
         _goal_regions[i].center = _pf.col(i);
-        _goal_regions[i].radius = 0.5;
+        _goal_regions[i].radius = 10;
         _goal_regions[i].is_region = true;
     }
 
@@ -465,8 +465,8 @@ void Generator::updateGoalCostTerms(int agent_id) {
         if (dist_to_center <= _goal_regions[agent_id].radius) {
             // Inside the region - reduce goal tracking penalty significantly
             // This allows the agent to "relax" once inside
-            s_free_scaled *= 0.1;  // 10% of normal penalty
-            s_obs_scaled *= 0.1;
+            s_free_scaled *= 0.8;  // 10% of normal penalty
+            s_obs_scaled *= 0.8;
             
             // Optional: Keep goals as-is (no projection needed when inside)
         } else {
