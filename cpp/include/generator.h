@@ -45,6 +45,14 @@ public:
         Eigen::MatrixXd po, pf;
         Solver solver_name;
         std::string motion_type;
+        int max_clusters;
+        double max_cost_threshold;
+        double min_cost_threshold;
+        double goal_region_radius;
+        bool goal_region_is_region;
+        double goal_circular_radius;
+        double goal_circular_omega;
+        double goal_translation_velocity;
     };
 
     Generator(const Generator::Params& p);
@@ -84,6 +92,11 @@ private:
 
     float _max_cost;
     float _min_cost;
+    
+    // Goal motion speed parameters
+    double _goal_circular_radius;
+    double _goal_circular_omega;
+    double _goal_translation_velocity;
 
     BezierCurve _bezier;
     DoubleIntegrator3D _model_pred;

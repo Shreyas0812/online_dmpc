@@ -13,9 +13,9 @@ Generator::Generator(const Generator::Params& p) :
     _bezier(p.bezier_params),
     _model_pred(p.mpc_params.h, p.model_params),
     _model_exec(p.mpc_params.Ts, p.model_params),
-    _max_clusters(1),
-    _max_cost(0.08),
-    _min_cost(-0.01)
+    _max_clusters(p.max_clusters),
+    _max_cost(p.max_cost_threshold),
+    _min_cost(p.min_cost_threshold)
 {
     // Unpack params from struct into private members
     _h = p.mpc_params.h;
@@ -35,6 +35,11 @@ Generator::Generator(const Generator::Params& p) :
     _fpf_obs.reserve(_Ncmd);
     _lin_coll = p.mpc_params.tuning.lin_coll;
     _quad_coll = p.mpc_params.tuning.quad_coll;
+    
+    // Store goal motion speed parameters
+    _goal_circular_radius = p.goal_circular_radius;
+    _goal_circular_omega = p.goal_circular_omega;
+    _goal_translation_velocity = p.goal_translation_velocity;
 
     // Define two time bases:
     // 1) h_samples is the time base for the planning of trajectories
@@ -98,8 +103,8 @@ Generator::Generator(const Generator::Params& p) :
     _goal_regions.resize(_Ncmd);
     for (int i = 0; i < _Ncmd; i++) {
         _goal_regions[i].center = _pf.col(i);
-        _goal_regions[i].radius = 0.5;
-        _goal_regions[i].is_region = true;
+        _goal_regions[i].radius = p.goal_region_radius;
+        _goal_regions[i].is_region = p.goal_region_is_region;
     }
 
 }
@@ -533,11 +538,10 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
     // Choose motion type based on _motion_type string
     if (_motion_type == "circular") {
         // Circular motion about z-axis
-        double angular_velocity = 0.2;  // Radians per second
+        double angular_velocity = _goal_circular_omega;  // Radians per second from config
         
-        // Calculate radius from z-axis (distance from origin in x-y plane)
-        double radius = sqrt(_original_goals[agent_id](0) * _original_goals[agent_id](0) + 
-                        _original_goals[agent_id](1) * _original_goals[agent_id](1));
+        // Use radius from config or calculate from original position
+        double radius = _goal_circular_radius;
         
         // Calculate current angle from original position
         double original_angle = atan2(_original_goals[agent_id](1), _original_goals[agent_id](0));
@@ -559,20 +563,20 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
     }
     else if (_motion_type == "circular_translating") {
         // Circular motion about translating z-axis
-        double angular_velocity = 0.2;  // Radians per second
+        double angular_velocity = _goal_circular_omega;  // Radians per second from config
         
         // Define translation velocity of the rotation axis
-        double translation_velocity_x = 0.02;  // Units per second
-        double translation_velocity_y = 0.01;  // Units per second
+        double translation_velocity_x = _goal_translation_velocity;  // Units per second from config
+        double translation_velocity_y = _goal_translation_velocity * 0.5;  // Half speed in Y
         
         // Calculate current center of rotation (translating with time)
         double center_x = time * translation_velocity_x;
         double center_y = time * translation_velocity_y;
         
-        // Calculate radius from the translating axis
+        // Use radius from config
+        double radius = _goal_circular_radius;
         double relative_x = _original_goals[agent_id](0);
         double relative_y = _original_goals[agent_id](1);
-        double radius = sqrt(relative_x * relative_x + relative_y * relative_y);
         
         // Calculate current angle from original position
         double original_angle = atan2(relative_y, relative_x);
@@ -594,8 +598,8 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
     } 
     else {  // "translating"
         // Simple translation without rotation
-        double translation_velocity_x = 0.02;  // Units per second
-        double translation_velocity_y = 0.00;  // Units per second
+        double translation_velocity_x = _goal_translation_velocity;  // Units per second from config
+        double translation_velocity_y = 0.0;  // No Y movement for pure translation
         
         // Calculate current translation offset
         double offset_x = time * translation_velocity_x;

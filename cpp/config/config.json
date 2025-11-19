@@ -3,6 +3,16 @@
   "Ncmd": 4,
   "test": "default",
   "solver": "qpoases",
+  
+  "simulation_duration": 75,
+  "output_trajectories_paths": [
+    "../results/trajectories.txt",
+    "../../../SwarmSync/trajectories.txt"
+  ],
+  "output_goals_paths": [
+    "../results/goals.txt",
+    "../../../SwarmSync/goals.txt"
+  ],
 
   "po":[
     [-1.0, -1.0, 1.0],
@@ -59,8 +69,23 @@
   "std_position": 0.00228682,
   "std_velocity": 0.0109302,
 
+  "collision_check_rmin": 0.15,
+  "collision_check_order": 2,
+  "collision_check_height_scaling": 3.0,
+  "goal_tolerance": 0.1,
 
-  "motion_type": "circular_translating",
+  "max_clusters": 1,
+  "max_cost_threshold": 0.08,
+  "min_cost_threshold": -0.01,
+
+  "goal_region_radius": 0.5,
+  "goal_region_is_region": false,
+
+  "goal_circular_radius": 2.0,
+  "goal_circular_omega": 0.5,
+  "goal_translation_velocity": 0.2,
+
+  "motion_type": "translating",
 
   "motion_type1": "circular",
   "motion_type2": "translating",

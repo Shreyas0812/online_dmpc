@@ -24,8 +24,16 @@ public:
 
 
     void run(int duration);
+    void run();  // Run with duration from config
     void saveDataToFile(char const* pathAndName);
     void saveGoalDataToFile(char const* goalPathAndName);
+    void saveDataToFile();  // Save to paths from config
+    void saveGoalDataToFile();  // Save to paths from config
+    
+    // Getters for config parameters
+    int getSimulationDuration() const { return _simulation_duration; }
+    const std::vector<std::string>& getOutputTrajectoriesPaths() const { return _output_trajectories_paths; }
+    const std::vector<std::string>& getOutputGoalsPaths() const { return _output_goals_paths; }
 
 private:
 
@@ -51,6 +59,17 @@ private:
     int _N;
     float _h;
     float _Ts;
+    
+    // Simulation config parameters
+    int _simulation_duration;
+    std::vector<std::string> _output_trajectories_paths;
+    std::vector<std::string> _output_goals_paths;
+    
+    // Collision check parameters
+    float _collision_check_rmin;
+    int _collision_check_order;
+    float _collision_check_height_scaling;
+    float _goal_tolerance;
 
     // Methods
     Generator::Params parseJSON(std::ifstream& config_file);

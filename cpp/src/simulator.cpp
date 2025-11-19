@@ -39,6 +39,28 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     // Parse the data into variables and create the generator params object
     _N = j["N"];
     _Ncmd = j["Ncmd"];
+    
+    // Parse simulation config parameters
+    _simulation_duration = j.value("simulation_duration", 75);
+    
+    // Parse output paths as arrays
+    if (j.contains("output_trajectories_paths") && j["output_trajectories_paths"].is_array()) {
+        _output_trajectories_paths = j["output_trajectories_paths"].get<std::vector<std::string>>();
+    } else {
+        _output_trajectories_paths = {"../results/trajectories.txt"};
+    }
+    
+    if (j.contains("output_goals_paths") && j["output_goals_paths"].is_array()) {
+        _output_goals_paths = j["output_goals_paths"].get<std::vector<std::string>>();
+    } else {
+        _output_goals_paths = {"../results/goals.txt"};
+    }
+    
+    // Parse collision check and goal parameters
+    _collision_check_rmin = j.value("collision_check_rmin", 0.15f);
+    _collision_check_order = j.value("collision_check_order", 2);
+    _collision_check_height_scaling = j.value("collision_check_height_scaling", 3.0f);
+    _goal_tolerance = j.value("goal_tolerance", 0.1f);
 
     std::string solver_name =  j["solver"];
     Solver qp_solver;
@@ -97,6 +119,20 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
 
     // Motion type for goal movement
     std::string motion_type = j.value("motion_type", "circular");
+    
+    // Parse generator tuning parameters
+    int max_clusters = j.value("max_clusters", 1);
+    double max_cost_threshold = j.value("max_cost_threshold", 0.08);
+    double min_cost_threshold = j.value("min_cost_threshold", -0.01);
+    
+    // Parse goal region parameters
+    double goal_region_radius = j.value("goal_region_radius", 0.5);
+    bool goal_region_is_region = j.value("goal_region_is_region", false);
+    
+    // Parse goal motion speed parameters
+    double goal_circular_radius = j.value("goal_circular_radius", 2.0);
+    double goal_circular_omega = j.value("goal_circular_omega", 0.5);
+    double goal_translation_velocity = j.value("goal_translation_velocity", 0.5);
 
     // Generate the test
     std::string test_type =  j["test"];
@@ -128,7 +164,10 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     else throw std::invalid_argument("Invalid test type '" + test_type + " '");
 
     Generator::Params p = {_bezier_params, _model_params, ellipse_vec,
-                           _mpc_params, _po, _pf, qp_solver, motion_type};
+                           _mpc_params, _po, _pf, qp_solver, motion_type,
+                           max_clusters, max_cost_threshold, min_cost_threshold,
+                           goal_region_radius, goal_region_is_region,
+                           goal_circular_radius, goal_circular_omega, goal_translation_velocity};
     return p;
 }
 
@@ -180,9 +219,9 @@ void Simulator::run(int duration) {
 
 
 bool Simulator::collisionCheck(const std::vector<Eigen::MatrixXd> &trajectories) {
-    float rmin_check = 0.15;
-    int order = 2;
-    VectorXd c_check = (Eigen::Vector3d() << 1.0, 1.0, 3.0).finished();
+    float rmin_check = _collision_check_rmin;
+    int order = _collision_check_order;
+    VectorXd c_check = (Eigen::Vector3d() << 1.0, 1.0, _collision_check_height_scaling).finished();
     MatrixXd E_check = c_check.asDiagonal();
     MatrixXd E1_check = E_check.inverse();
 
@@ -219,7 +258,7 @@ bool Simulator::goalCheck(const std::vector<State3D> &states) {
     Vector3d diff;
     double dist;
     bool reached_goal = true;
-    float goal_tolerance = 0.1;  // 10 centimeters tolerance
+    float goal_tolerance = _goal_tolerance;
 
     for (int i = 0; i < _Ncmd; i++) {
         diff = states[i].pos - _pf.col(i);
@@ -257,6 +296,10 @@ State3D Simulator::addRandomNoise(const State3D &states) {
     return result;
 }
 
+void Simulator::run() {
+    run(_simulation_duration);
+}
+
 void Simulator::saveDataToFile(char const *pathAndName) {
 
     ofstream file(pathAndName, ios::out | ios::trunc);
@@ -283,6 +326,12 @@ void Simulator::saveDataToFile(char const *pathAndName) {
 
 }
 
+void Simulator::saveDataToFile() {
+    for (const auto& path : _output_trajectories_paths) {
+        saveDataToFile(path.c_str());
+    }
+}
+
 void Simulator::saveGoalDataToFile(char const *pathAndName) {
 
     ofstream file(pathAndName, ios::out | ios::trunc);
@@ -302,6 +351,12 @@ void Simulator::saveGoalDataToFile(char const *pathAndName) {
         cerr << "Error while trying to open file" << endl;
     }
 
+}
+
+void Simulator::saveGoalDataToFile() {
+    for (const auto& path : _output_goals_paths) {
+        saveGoalDataToFile(path.c_str());
+    }
 }
 
 MatrixXd Simulator::generateRandomPoints(int N, const Vector3d &pmin,
