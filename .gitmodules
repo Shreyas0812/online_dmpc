@@ -1,3 +1,6 @@
 [submodule "cpp/submodules/qpOASES"]
 	path = cpp/submodules/qpOASES
 	url = https://github.com/whoenig/qpOASES/
+[submodule "cpp/submodules/hungarian-algorithm-cpp"]
+	path = cpp/submodules/hungarian-algorithm-cpp
+	url = https://github.com/mcximing/hungarian-algorithm-cpp/
