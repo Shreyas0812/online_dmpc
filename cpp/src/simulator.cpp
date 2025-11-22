@@ -30,6 +30,24 @@ Simulator::Simulator(std::ifstream& config_file) {
         State3D agent_i = {_po.col(i), VectorXd::Zero(_po.rows())};
         _current_states.push_back(addRandomNoise(agent_i));
     }
+
+    // Initialize task reallocation after _Ncmd and _pf are set
+    _original_goals_vec.resize(_Ncmd);
+    for (int i = 0; i < _Ncmd; i++) {
+        _original_goals_vec[i] = _pf.col(i);
+    }
+
+    _current_assignment.resize(_Ncmd);
+    for (int i = 0; i < _Ncmd; i++) {
+        _current_assignment[i] = i;
+    }
+
+    if (_reallocation_enabled) {
+        _reallocation_manager = std::make_unique<TaskReallocationManager>(_reallocation_period);
+        std::cout << "Task reallocation ENABLED (period: " << _reallocation_period << "s)" << std::endl;
+    } else {
+        std::cout << "Task reallocation DISABLED" << std::endl;
+    }
 }
 
 Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
@@ -134,6 +152,13 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     double goal_circular_omega = j.value("goal_circular_omega", 0.5);
     double goal_translation_velocity = j.value("goal_translation_velocity", 0.5);
 
+    // Parse reallocation parameters
+    _reallocation_enabled = j.value("reallocation_enabled", false);
+    _reallocation_period = j.value("reallocation_period", 2.0);
+    
+    std::cout << "Config: reallocation_enabled = " << _reallocation_enabled << std::endl;
+    std::cout << "Config: reallocation_period = " << _reallocation_period << std::endl;
+
     // Generate the test
     std::string test_type =  j["test"];
     if (!test_type.compare("default")) {
@@ -189,7 +214,37 @@ void Simulator::run(int duration) {
 
     // Loop through all the time steps for the duration specified
     for (int k = 0; k < K; k++) {
+        double current_time = k * _Ts;
+
         if (count == max_count) {
+
+            if (_reallocation_enabled && _reallocation_manager->shouldReallocate(current_time)) {
+                
+                // Get current agent positions 
+                std::vector<Eigen::Vector3d> agent_positions;
+                for (int i=0; i < _Ncmd; i++) {
+                    agent_positions.push_back(_current_states[i].pos);
+                }
+
+                // Attempt reallocation
+                bool assignment_changed = _reallocation_manager->updateAssignment(
+                    current_time,
+                    agent_positions,
+                    _original_goals_vec,
+                    _current_assignment
+                );
+                
+                if (assignment_changed) {
+                    std::cout << "\n*** GOALS REASSIGNED at t=" << current_time << "s ***\n" << std::endl;
+                    
+                    // Update generator with new goal assignments
+                    for (int i = 0; i < _Ncmd; i++) {
+                        int new_goal_idx = _current_assignment[i];
+                        _generator->setGoalPoint(i, _original_goals_vec[new_goal_idx]);
+                    }
+                }
+            }
+
             // Get next series of inputs
             t1 = high_resolution_clock::now();
             _inputs = _generator->getNextInputs(_current_states);
@@ -215,6 +270,11 @@ void Simulator::run(int duration) {
     // After simulation finished, run a check on the solution
     collisionCheck(_trajectories);
     goalCheck(_current_states);
+
+    if (_reallocation_enabled) {
+        std::cout << "\nTotal reallocations performed: " 
+                  << _reallocation_manager->getReallocationCount() << std::endl;
+    }
 }
 
 

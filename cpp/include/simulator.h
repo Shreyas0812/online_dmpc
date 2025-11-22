@@ -6,6 +6,7 @@
 #define ONLINE_PLANNING_SIMULATOR_H
 
 #include "generator.h"
+#include "task_reallocation.h"
 #include "json.hpp"
 #include <random>
 #include <fstream>
@@ -78,6 +79,13 @@ private:
     bool goalCheck(const std::vector<State3D>& states);
     Eigen::MatrixXd generateRandomPoints(int N, const Eigen::Vector3d &pmin,
                                          const Eigen::Vector3d &pmax, float rmin);
+    
+    // Task reallocation
+    std::unique_ptr<TaskReallocationManager> _reallocation_manager;
+    bool _reallocation_enabled;
+    double _reallocation_period;
+    std::vector<int> _current_assignment;
+    std::vector<Eigen::Vector3d> _original_goals_vec;
 };
 
 #endif //ONLINE_PLANNING_SIMULATOR_H
