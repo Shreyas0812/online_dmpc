@@ -19,10 +19,16 @@ find_package(Eigen3 REQUIRED)
 
 add_subdirectory(submodules/qpOASES)
 
+# Add Hungarian Algorithm library
+add_library(hungarian
+	submodules/hungarian-algorithm-cpp/Hungarian.cpp
+)
+
 include_directories(
 	${PROJECT_SOURCE_DIR}/include
 	${EIGEN3_INCLUDE_DIR}
 	submodules/qpOASES/include
+	submodules/hungarian-algorithm-cpp
 )
 
 message("-- Eigen library directory: ${EIGEN3_INCLUDE_DIR}")
@@ -56,6 +62,7 @@ target_link_libraries(generator
 	solver
 	pthread
 	qpOASES
+	hungarian
 	model)
 
 target_link_libraries(simulator
