@@ -1,20 +1,28 @@
 {
   "test": "default",
-  "N": 4,
-  "Ncmd": 4,
+  "N": 8,
+  "Ncmd": 8,
   
   "po": [
     [0.5, 0.5, 1.0],
+    [1.5, 0.5, 1.0],
     [2.5, 0.5, 1.0],
-    [2.5, 2.5, 1.0],
-    [0.5, 2.5, 1.0]
+    [0.5, 1.5, 1.0],
+    [2.5, 1.5, 1.0],
+    [0.5, 2.5, 1.0],
+    [1.5, 2.5, 1.0],
+    [2.5, 2.5, 1.0]
   ],
   
   "pf": [
     [2.5, 2.5, 1.0],
+    [1.5, 2.5, 1.0],
     [0.5, 2.5, 1.0],
-    [0.5, 0.5, 1.0],
-    [2.5, 0.5, 1.0]
+    [2.5, 1.5, 1.0],
+    [0.5, 1.5, 1.0],
+    [2.5, 0.5, 1.0],
+    [1.5, 0.5, 1.0],
+    [0.5, 0.5, 1.0]
   ],
   
   "solver": "qpoases",
@@ -68,9 +76,9 @@
   "goal_circular_omega": 0.5,
   "goal_translation_velocity": 0.5,
   
-  "simulation_duration": 25,
-  "output_trajectories_paths": ["../results/scenario_1_trajectories.txt"],
-  "output_goals_paths": ["../results/scenario_1_goals.txt"],
+  "simulation_duration": 35,
+  "output_trajectories_paths": ["../results/scenario_3_trajectories.txt", "../../../SwarmSync/scenario_3_trajectories.txt"],
+  "output_goals_paths": ["../results/scenario_3_goals.txt", "../../../SwarmSync/scenario_3_goals.txt"],
   
   "collision_check_rmin": 0.15,
   "collision_check_order": 2,
