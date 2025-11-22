@@ -1,0 +1,678 @@
+Solving multi-robot motion planning problem...
+Config: reallocation_enabled = 1
+Config: reallocation_period = 2
+Task reallocation ENABLED (period: 2s)
+Solving frequency = 89.5656 Hz
+Solving frequency = 98.3284 Hz
+Solving frequency = 103.284 Hz
+Solving frequency = 119.76 Hz
+Solving frequency = 90.5305 Hz
+Solving frequency = 114.364 Hz
+Solving frequency = 64.041 Hz
+Solving frequency = 112.676 Hz
+Solving frequency = 59.011 Hz
+Solving frequency = 83.605 Hz
+Solving frequency = 86.7453 Hz
+Solving frequency = 96.2557 Hz
+Solving frequency = 106.045 Hz
+Solving frequency = 123.138 Hz
+Solving frequency = 82.9256 Hz
+Solving frequency = 66.5868 Hz
+Solving frequency = 139.665 Hz
+Solving frequency = 89.7022 Hz
+Solving frequency = 179.533 Hz
+Solving frequency = 164.42 Hz
+Total assignment cost: 6.84721
+
+=== Reallocation #1 at time 2s ===
+Agent 0: Goal changed from 0 to 7 (Distance: 0.879428 m)
+Agent 1: Goal changed from 1 to 6 (Distance: 0.870724 m)
+Agent 2: Goal changed from 2 to 5 (Distance: 1.05764 m)
+Agent 3: Goal changed from 3 to 4 (Distance: 0.570443 m)
+Agent 4: Goal changed from 4 to 3 (Distance: 0.687469 m)
+Agent 5: Goal changed from 5 to 2 (Distance: 1.07423 m)
+Agent 6: Goal changed from 6 to 1 (Distance: 0.887004 m)
+Agent 7: Goal changed from 7 to 0 (Distance: 0.82027 m)
+
+*** GOALS REASSIGNED at t=2s ***
+
+Solving frequency = 166.889 Hz
+Solving frequency = 146.434 Hz
+Solving frequency = 161.264 Hz
+Solving frequency = 182.216 Hz
+Solving frequency = 198.926 Hz
+Solving frequency = 224.065 Hz
+Solving frequency = 304.971 Hz
+Solving frequency = 295.596 Hz
+Solving frequency = 285.47 Hz
+Solving frequency = 189.681 Hz
+Solving frequency = 211.999 Hz
+Solving frequency = 179.759 Hz
+Solving frequency = 299.222 Hz
+Solving frequency = 173.792 Hz
+Solving frequency = 289.771 Hz
+Solving frequency = 303.582 Hz
+Solving frequency = 318.471 Hz
+Solving frequency = 302.206 Hz
+Solving frequency = 345.781 Hz
+Solving frequency = 214.454 Hz
+Total assignment cost: 1.37623
+
+=== Reallocation #2 at time 4s ===
+Agent 0: Goal changed from 7 to 0 (Distance: 0.0169688 m)
+Agent 1: Goal changed from 6 to 1 (Distance: 0.0168052 m)
+Agent 2: Goal changed from 5 to 2 (Distance: 0.0309452 m)
+Agent 3: Goal changed from 4 to 3 (Distance: 0.214118 m)
+Agent 4: Goal changed from 3 to 4 (Distance: 0.00328307 m)
+Agent 5: Goal changed from 2 to 5 (Distance: 0.00449173 m)
+Agent 6: Goal changed from 1 to 6 (Distance: 0.889603 m)
+Agent 7: Goal changed from 0 to 7 (Distance: 0.200013 m)
+
+*** GOALS REASSIGNED at t=4s ***
+
+Solving frequency = 349.406 Hz
+Solving frequency = 226.091 Hz
+Solving frequency = 241.546 Hz
+Solving frequency = 229.779 Hz
+Solving frequency = 248.694 Hz
+Solving frequency = 230.468 Hz
+Solving frequency = 221.435 Hz
+Solving frequency = 249.563 Hz
+Solving frequency = 255.558 Hz
+Solving frequency = 355.492 Hz
+Solving frequency = 305.064 Hz
+Solving frequency = 237.53 Hz
+Solving frequency = 224.165 Hz
+Solving frequency = 228.258 Hz
+Solving frequency = 252.589 Hz
+Solving frequency = 231.965 Hz
+Solving frequency = 226.296 Hz
+Solving frequency = 251.067 Hz
+Solving frequency = 214.592 Hz
+Solving frequency = 227.428 Hz
+Total assignment cost: 0.00170879
+Solving frequency = 258.331 Hz
+Total assignment cost: 0.00197191
+Solving frequency = 231.857 Hz
+Total assignment cost: 0.00198818
+Solving frequency = 254.712 Hz
+Total assignment cost: 0.00180482
+Solving frequency = 226.963 Hz
+Total assignment cost: 0.00149973
+Solving frequency = 228.781 Hz
+Total assignment cost: 0.00115408
+Solving frequency = 246.366 Hz
+Total assignment cost: 0.000833315
+Solving frequency = 228.05 Hz
+Total assignment cost: 0.000573179
+Solving frequency = 251.319 Hz
+Total assignment cost: 0.00037913
+Solving frequency = 233.918 Hz
+Total assignment cost: 0.000246503
+Solving frequency = 249.19 Hz
+Total assignment cost: 0.000162925
+Solving frequency = 229.463 Hz
+Total assignment cost: 0.000115016
+Solving frequency = 217.723 Hz
+Total assignment cost: 8.60406e-05
+Solving frequency = 233.263 Hz
+Total assignment cost: 6.59412e-05
+Solving frequency = 236.798 Hz
+Total assignment cost: 4.92952e-05
+Solving frequency = 226.603 Hz
+Total assignment cost: 3.43633e-05
+Solving frequency = 249.75 Hz
+Total assignment cost: 2.18099e-05
+Solving frequency = 231.75 Hz
+Total assignment cost: 1.20737e-05
+Solving frequency = 187.301 Hz
+Total assignment cost: 5.18165e-06
+Solving frequency = 214.179 Hz
+Total assignment cost: 2.27525e-06
+Solving frequency = 247.525 Hz
+Total assignment cost: 3.32503e-06
+Solving frequency = 251.509 Hz
+Total assignment cost: 3.28045e-06
+Solving frequency = 229.568 Hz
+Total assignment cost: 2.57363e-06
+Solving frequency = 387.297 Hz
+Total assignment cost: 1.75533e-06
+Solving frequency = 298.418 Hz
+Total assignment cost: 1.12035e-06
+Solving frequency = 394.633 Hz
+Total assignment cost: 6.88667e-07
+Solving frequency = 200.803 Hz
+Total assignment cost: 4.37138e-07
+Solving frequency = 263.366 Hz
+Total assignment cost: 3.40723e-07
+Solving frequency = 244.32 Hz
+Total assignment cost: 3.44305e-07
+Solving frequency = 211.551 Hz
+Total assignment cost: 3.58231e-07
+Solving frequency = 216.076 Hz
+Total assignment cost: 3.36466e-07
+Solving frequency = 208.03 Hz
+Total assignment cost: 2.75938e-07
+Solving frequency = 208.507 Hz
+Total assignment cost: 1.98018e-07
+Solving frequency = 259.605 Hz
+Total assignment cost: 1.23844e-07
+Solving frequency = 223.214 Hz
+Total assignment cost: 6.75229e-08
+Solving frequency = 215.378 Hz
+Total assignment cost: 3.06394e-08
+Solving frequency = 214.731 Hz
+Total assignment cost: 1.39855e-08
+Solving frequency = 210.837 Hz
+Total assignment cost: 1.13022e-08
+Solving frequency = 214.133 Hz
+Total assignment cost: 7.74692e-09
+Solving frequency = 213.721 Hz
+Total assignment cost: 4.17676e-09
+Solving frequency = 216.826 Hz
+Total assignment cost: 4.57872e-09
+Solving frequency = 215.75 Hz
+Total assignment cost: 5.27324e-09
+Solving frequency = 213.675 Hz
+Total assignment cost: 4.407e-09
+Solving frequency = 213.447 Hz
+Total assignment cost: 2.69501e-09
+Solving frequency = 213.675 Hz
+Total assignment cost: 1.04408e-09
+Solving frequency = 210.261 Hz
+Total assignment cost: 1.04533e-09
+Solving frequency = 212.675 Hz
+Total assignment cost: 1.67678e-09
+Solving frequency = 204.29 Hz
+Total assignment cost: 1.73307e-09
+Solving frequency = 218.627 Hz
+Total assignment cost: 1.39515e-09
+Solving frequency = 233.699 Hz
+Total assignment cost: 9.16981e-10
+Solving frequency = 206.058 Hz
+Total assignment cost: 4.98612e-10
+Solving frequency = 212.857 Hz
+Total assignment cost: 2.39048e-10
+Solving frequency = 217.297 Hz
+Total assignment cost: 1.59085e-10
+Solving frequency = 206.186 Hz
+Total assignment cost: 1.37627e-10
+Solving frequency = 207.297 Hz
+Total assignment cost: 8.72221e-11
+Solving frequency = 214.041 Hz
+Total assignment cost: 3.71303e-11
+Solving frequency = 307.125 Hz
+Total assignment cost: 4.64586e-11
+Solving frequency = 201.41 Hz
+Total assignment cost: 6.5018e-11
+Solving frequency = 207.857 Hz
+Total assignment cost: 6.20227e-11
+Solving frequency = 212.404 Hz
+Total assignment cost: 4.50791e-11
+Solving frequency = 210.571 Hz
+Total assignment cost: 2.52336e-11
+Solving frequency = 212.585 Hz
+Total assignment cost: 1.10822e-11
+Solving frequency = 210.438 Hz
+Total assignment cost: 9.47488e-12
+Solving frequency = 213.402 Hz
+Total assignment cost: 1.19646e-11
+Solving frequency = 212.224 Hz
+Total assignment cost: 1.06991e-11
+Solving frequency = 310.849 Hz
+Total assignment cost: 7.34219e-12
+Solving frequency = 282.965 Hz
+Total assignment cost: 3.96854e-12
+Solving frequency = 281.373 Hz
+Total assignment cost: 2.12963e-12
+Solving frequency = 284.738 Hz
+Total assignment cost: 2.3034e-12
+Solving frequency = 292.912 Hz
+Total assignment cost: 2.2837e-12
+Solving frequency = 289.687 Hz
+Total assignment cost: 1.71011e-12
+Solving frequency = 285.388 Hz
+Total assignment cost: 9.91695e-13
+Solving frequency = 208.855 Hz
+Total assignment cost: 5.74937e-13
+Solving frequency = 293.945 Hz
+Total assignment cost: 7.50242e-13
+Solving frequency = 204.834 Hz
+Total assignment cost: 8.239e-13
+Solving frequency = 211.954 Hz
+Total assignment cost: 7.24986e-13
+Solving frequency = 307.977 Hz
+Total assignment cost: 5.51445e-13
+Solving frequency = 299.491 Hz
+Total assignment cost: 3.99554e-13
+Solving frequency = 249.501 Hz
+Total assignment cost: 3.6162e-13
+Solving frequency = 320.616 Hz
+Total assignment cost: 4.05666e-13
+Solving frequency = 292.398 Hz
+Total assignment cost: 4.06753e-13
+Solving frequency = 286.451 Hz
+Total assignment cost: 3.81971e-13
+Solving frequency = 285.47 Hz
+Total assignment cost: 3.55273e-13
+Solving frequency = 295.072 Hz
+Total assignment cost: 3.54321e-13
+Solving frequency = 287.604 Hz
+Total assignment cost: 3.75279e-13
+Solving frequency = 209.908 Hz
+Total assignment cost: 4.02382e-13
+Solving frequency = 303.582 Hz
+Total assignment cost: 4.28363e-13
+Solving frequency = 211.104 Hz
+Total assignment cost: 4.53802e-13
+Solving frequency = 306.56 Hz
+Total assignment cost: 4.78595e-13
+Solving frequency = 292.141 Hz
+Total assignment cost: 4.91476e-13
+Solving frequency = 207.125 Hz
+Total assignment cost: 4.90156e-13
+Solving frequency = 211.416 Hz
+Total assignment cost: 4.73605e-13
+Solving frequency = 215.193 Hz
+Total assignment cost: 4.48169e-13
+Solving frequency = 210.793 Hz
+Total assignment cost: 4.20916e-13
+Solving frequency = 300.12 Hz
+Total assignment cost: 4.06115e-13
+Solving frequency = 200.924 Hz
+Total assignment cost: 3.9869e-13
+Solving frequency = 213.904 Hz
+Total assignment cost: 3.92847e-13
+Solving frequency = 226.244 Hz
+Total assignment cost: 3.91126e-13
+Solving frequency = 236.407 Hz
+Total assignment cost: 3.94494e-13
+Solving frequency = 229.095 Hz
+Total assignment cost: 4.06756e-13
+Solving frequency = 215.936 Hz
+Total assignment cost: 4.17654e-13
+Solving frequency = 216.873 Hz
+Total assignment cost: 4.17512e-13
+Solving frequency = 293.083 Hz
+Total assignment cost: 4.1163e-13
+Solving frequency = 286.041 Hz
+Total assignment cost: 4.11226e-13
+Solving frequency = 226.244 Hz
+Total assignment cost: 4.15356e-13
+Solving frequency = 346.62 Hz
+Total assignment cost: 4.17132e-13
+Solving frequency = 210.261 Hz
+Total assignment cost: 4.16062e-13
+Solving frequency = 156.201 Hz
+Total assignment cost: 4.11898e-13
+Solving frequency = 219.394 Hz
+Total assignment cost: 4.04664e-13
+Solving frequency = 220.459 Hz
+Total assignment cost: 3.952e-13
+Solving frequency = 209.644 Hz
+Total assignment cost: 3.82066e-13
+Solving frequency = 212.675 Hz
+Total assignment cost: 3.67961e-13
+Solving frequency = 213.038 Hz
+Total assignment cost: 3.55367e-13
+Solving frequency = 217.77 Hz
+Total assignment cost: 3.51108e-13
+Solving frequency = 309.885 Hz
+Total assignment cost: 3.44935e-13
+Solving frequency = 208.899 Hz
+Total assignment cost: 3.4006e-13
+Solving frequency = 213.402 Hz
+Total assignment cost: 3.32664e-13
+Solving frequency = 210.482 Hz
+Total assignment cost: 3.18257e-13
+Solving frequency = 260.146 Hz
+Total assignment cost: 3.00564e-13
+Solving frequency = 214.638 Hz
+Total assignment cost: 2.92485e-13
+Solving frequency = 202.634 Hz
+Total assignment cost: 2.99581e-13
+Solving frequency = 219.635 Hz
+Total assignment cost: 3.19002e-13
+Solving frequency = 223.664 Hz
+Total assignment cost: 3.45922e-13
+Solving frequency = 212.585 Hz
+Total assignment cost: 3.73686e-13
+Solving frequency = 221.729 Hz
+Total assignment cost: 4.009e-13
+Solving frequency = 220.604 Hz
+Total assignment cost: 4.2042e-13
+Solving frequency = 214.179 Hz
+Total assignment cost: 4.33574e-13
+Solving frequency = 215.471 Hz
+Total assignment cost: 4.45032e-13
+Solving frequency = 206.911 Hz
+Total assignment cost: 4.54486e-13
+Solving frequency = 209.424 Hz
+Total assignment cost: 4.62539e-13
+Solving frequency = 209.996 Hz
+Total assignment cost: 4.71194e-13
+Solving frequency = 212.902 Hz
+Total assignment cost: 4.79278e-13
+Solving frequency = 218.579 Hz
+Total assignment cost: 4.83172e-13
+Solving frequency = 210.305 Hz
+Total assignment cost: 4.84822e-13
+Solving frequency = 210.881 Hz
+Total assignment cost: 4.85426e-13
+Solving frequency = 298.686 Hz
+Total assignment cost: 4.80106e-13
+Solving frequency = 209.293 Hz
+Total assignment cost: 4.68924e-13
+Solving frequency = 324.886 Hz
+Total assignment cost: 4.49868e-13
+Solving frequency = 226.655 Hz
+Total assignment cost: 4.36296e-13
+Solving frequency = 218.436 Hz
+Total assignment cost: 4.27549e-13
+Solving frequency = 222.767 Hz
+Total assignment cost: 4.21831e-13
+Solving frequency = 212.585 Hz
+Total assignment cost: 4.08758e-13
+Solving frequency = 217.202 Hz
+Total assignment cost: 3.96889e-13
+Solving frequency = 234.522 Hz
+Total assignment cost: 3.96965e-13
+Solving frequency = 226.552 Hz
+Total assignment cost: 4.03579e-13
+Solving frequency = 394.322 Hz
+Total assignment cost: 4.09194e-13
+Solving frequency = 234.907 Hz
+Total assignment cost: 4.12344e-13
+Solving frequency = 321.958 Hz
+Total assignment cost: 4.16162e-13
+Solving frequency = 206.911 Hz
+Total assignment cost: 4.22093e-13
+Solving frequency = 206.398 Hz
+Total assignment cost: 4.23137e-13
+Solving frequency = 216.403 Hz
+Total assignment cost: 4.24475e-13
+Solving frequency = 214.777 Hz
+Total assignment cost: 4.19498e-13
+Solving frequency = 205.931 Hz
+Total assignment cost: 4.11102e-13
+Solving frequency = 209.644 Hz
+Total assignment cost: 4.00999e-13
+Solving frequency = 208.203 Hz
+Total assignment cost: 3.95144e-13
+Solving frequency = 209.074 Hz
+Total assignment cost: 3.93934e-13
+Solving frequency = 236.798 Hz
+Total assignment cost: 3.96814e-13
+Solving frequency = 208.551 Hz
+Total assignment cost: 4.0391e-13
+Solving frequency = 209.38 Hz
+Total assignment cost: 4.13593e-13
+Solving frequency = 210.793 Hz
+Total assignment cost: 4.28331e-13
+Solving frequency = 213.447 Hz
+Total assignment cost: 4.44117e-13
+Solving frequency = 318.269 Hz
+Total assignment cost: 4.60136e-13
+Solving frequency = 367.377 Hz
+Total assignment cost: 4.74927e-13
+Solving frequency = 301.386 Hz
+Total assignment cost: 4.80617e-13
+Solving frequency = 384.763 Hz
+Total assignment cost: 4.78358e-13
+Solving frequency = 288.101 Hz
+Total assignment cost: 4.7486e-13
+Solving frequency = 287.026 Hz
+Total assignment cost: 4.75989e-13
+Solving frequency = 218.341 Hz
+Total assignment cost: 4.8576e-13
+Solving frequency = 219.78 Hz
+Total assignment cost: 5.04461e-13
+Solving frequency = 222.025 Hz
+Total assignment cost: 5.24443e-13
+Solving frequency = 232.775 Hz
+Total assignment cost: 5.38135e-13
+Solving frequency = 306.843 Hz
+Total assignment cost: 5.42847e-13
+Solving frequency = 283.366 Hz
+Total assignment cost: 5.41053e-13
+Solving frequency = 280.978 Hz
+Total assignment cost: 5.3613e-13
+Solving frequency = 216.497 Hz
+Total assignment cost: 5.33444e-13
+Solving frequency = 208.507 Hz
+Total assignment cost: 5.28431e-13
+Solving frequency = 208.464 Hz
+Total assignment cost: 5.22147e-13
+Solving frequency = 215.796 Hz
+Total assignment cost: 5.12229e-13
+Solving frequency = 210.349 Hz
+Total assignment cost: 4.97431e-13
+Solving frequency = 185.943 Hz
+Total assignment cost: 4.76684e-13
+Solving frequency = 225.836 Hz
+Total assignment cost: 4.49698e-13
+Solving frequency = 215.471 Hz
+Total assignment cost: 4.16144e-13
+Solving frequency = 215.936 Hz
+Total assignment cost: 3.86327e-13
+Solving frequency = 213.995 Hz
+Total assignment cost: 3.62599e-13
+Solving frequency = 215.285 Hz
+Total assignment cost: 3.38722e-13
+Solving frequency = 214.869 Hz
+Total assignment cost: 3.1663e-13
+Solving frequency = 194.024 Hz
+Total assignment cost: 3.02006e-13
+Solving frequency = 280.584 Hz
+Total assignment cost: 3.04754e-13
+Solving frequency = 228.938 Hz
+Total assignment cost: 3.20405e-13
+Solving frequency = 221.141 Hz
+Total assignment cost: 3.36576e-13
+Solving frequency = 215.008 Hz
+Total assignment cost: 3.48909e-13
+Solving frequency = 307.409 Hz
+Total assignment cost: 3.57409e-13
+Solving frequency = 303.582 Hz
+Total assignment cost: 3.62423e-13
+Solving frequency = 203.128 Hz
+Total assignment cost: 3.68018e-13
+Solving frequency = 305.53 Hz
+Total assignment cost: 3.77496e-13
+Solving frequency = 222.42 Hz
+Total assignment cost: 3.89124e-13
+Solving frequency = 286.615 Hz
+Total assignment cost: 3.99859e-13
+Solving frequency = 290.107 Hz
+Total assignment cost: 4.07675e-13
+Solving frequency = 308.737 Hz
+Total assignment cost: 4.15363e-13
+Solving frequency = 224.014 Hz
+Total assignment cost: 4.26954e-13
+Solving frequency = 221.19 Hz
+Total assignment cost: 4.40932e-13
+Solving frequency = 224.366 Hz
+Total assignment cost: 4.55927e-13
+Solving frequency = 273.748 Hz
+Total assignment cost: 4.70318e-13
+Solving frequency = 223.214 Hz
+Total assignment cost: 4.78594e-13
+Solving frequency = 215.193 Hz
+Total assignment cost: 4.7566e-13
+Solving frequency = 217.486 Hz
+Total assignment cost: 4.64029e-13
+Solving frequency = 290.867 Hz
+Total assignment cost: 4.5178e-13
+Solving frequency = 202.758 Hz
+Total assignment cost: 4.34116e-13
+Solving frequency = 216.263 Hz
+Total assignment cost: 4.17152e-13
+Solving frequency = 209.776 Hz
+Total assignment cost: 3.95118e-13
+Solving frequency = 214.915 Hz
+Total assignment cost: 3.63275e-13
+Solving frequency = 210.97 Hz
+Total assignment cost: 3.30454e-13
+Solving frequency = 211.999 Hz
+Total assignment cost: 3.03692e-13
+Solving frequency = 211.416 Hz
+Total assignment cost: 2.87693e-13
+Solving frequency = 184.877 Hz
+Total assignment cost: 2.80195e-13
+Solving frequency = 214.777 Hz
+Total assignment cost: 2.82147e-13
+Solving frequency = 227.739 Hz
+Total assignment cost: 2.81805e-13
+Solving frequency = 223.464 Hz
+Total assignment cost: 2.77334e-13
+Solving frequency = 215.889 Hz
+Total assignment cost: 2.71786e-13
+Solving frequency = 200.401 Hz
+Total assignment cost: 2.69284e-13
+Solving frequency = 227.118 Hz
+Total assignment cost: 2.80692e-13
+Solving frequency = 186.081 Hz
+Total assignment cost: 3.00172e-13
+Solving frequency = 245.278 Hz
+Total assignment cost: 3.20314e-13
+Solving frequency = 312.207 Hz
+Total assignment cost: 3.38004e-13
+Solving frequency = 211.73 Hz
+Total assignment cost: 3.41365e-13
+Solving frequency = 207.987 Hz
+Total assignment cost: 3.32489e-13
+Solving frequency = 211.685 Hz
+Total assignment cost: 3.18893e-13
+Solving frequency = 222.42 Hz
+Total assignment cost: 3.16196e-13
+Solving frequency = 211.64 Hz
+Total assignment cost: 3.22709e-13
+Solving frequency = 211.64 Hz
+Total assignment cost: 3.35475e-13
+Solving frequency = 208.638 Hz
+Total assignment cost: 3.5119e-13
+Solving frequency = 207.039 Hz
+Total assignment cost: 3.6929e-13
+Solving frequency = 212.179 Hz
+Total assignment cost: 3.79078e-13
+Solving frequency = 202.758 Hz
+Total assignment cost: 3.8051e-13
+Solving frequency = 221.141 Hz
+Total assignment cost: 3.82063e-13
+Solving frequency = 214.823 Hz
+Total assignment cost: 3.82981e-13
+Solving frequency = 232.775 Hz
+Total assignment cost: 3.93968e-13
+Solving frequency = 203.542 Hz
+Total assignment cost: 4.03872e-13
+Solving frequency = 211.282 Hz
+Total assignment cost: 4.0779e-13
+Solving frequency = 206.911 Hz
+Total assignment cost: 4.03946e-13
+Solving frequency = 204.834 Hz
+Total assignment cost: 3.9548e-13
+Solving frequency = 306.091 Hz
+Total assignment cost: 3.9139e-13
+Solving frequency = 212.044 Hz
+Total assignment cost: 3.93886e-13
+Solving frequency = 207.297 Hz
+Total assignment cost: 4.00243e-13
+Solving frequency = 235.46 Hz
+Total assignment cost: 4.15385e-13
+Solving frequency = 231.642 Hz
+Total assignment cost: 4.34203e-13
+Solving frequency = 236.072 Hz
+Total assignment cost: 4.4652e-13
+Solving frequency = 348.068 Hz
+Total assignment cost: 4.52704e-13
+Solving frequency = 237.869 Hz
+Total assignment cost: 4.52134e-13
+Solving frequency = 293.169 Hz
+Total assignment cost: 4.46314e-13
+Solving frequency = 229.938 Hz
+Total assignment cost: 4.38279e-13
+Solving frequency = 340.716 Hz
+Total assignment cost: 4.29556e-13
+Solving frequency = 230.894 Hz
+Total assignment cost: 4.13861e-13
+Solving frequency = 222.767 Hz
+Total assignment cost: 4.00612e-13
+Solving frequency = 220.799 Hz
+Total assignment cost: 3.87425e-13
+Solving frequency = 217.817 Hz
+Total assignment cost: 3.82128e-13
+Solving frequency = 210.482 Hz
+Total assignment cost: 3.83496e-13
+Solving frequency = 213.721 Hz
+Total assignment cost: 3.87313e-13
+Solving frequency = 205.846 Hz
+Total assignment cost: 3.92214e-13
+Solving frequency = 215.936 Hz
+Total assignment cost: 3.98605e-13
+Solving frequency = 320.307 Hz
+Total assignment cost: 4.07286e-13
+Solving frequency = 204.96 Hz
+Total assignment cost: 4.08371e-13
+Solving frequency = 217.96 Hz
+Total assignment cost: 4.11453e-13
+Solving frequency = 217.675 Hz
+Total assignment cost: 4.16635e-13
+Solving frequency = 213.675 Hz
+Total assignment cost: 4.14519e-13
+Solving frequency = 211.82 Hz
+Total assignment cost: 4.02924e-13
+Solving frequency = 203.666 Hz
+Total assignment cost: 3.7973e-13
+Solving frequency = 219.491 Hz
+Total assignment cost: 3.67145e-13
+Solving frequency = 298.954 Hz
+Total assignment cost: 3.61582e-13
+Solving frequency = 288.684 Hz
+Total assignment cost: 3.54264e-13
+Solving frequency = 382.848 Hz
+Total assignment cost: 3.49936e-13
+Solving frequency = 189.502 Hz
+Total assignment cost: 3.49786e-13
+Solving frequency = 224.972 Hz
+Total assignment cost: 3.56235e-13
+Solving frequency = 205.888 Hz
+Total assignment cost: 3.66002e-13
+Solving frequency = 225.327 Hz
+Total assignment cost: 3.80456e-13
+Solving frequency = 221.729 Hz
+Total assignment cost: 3.95145e-13
+Solving frequency = 219.106 Hz
+Total assignment cost: 4.07252e-13
+Solving frequency = 218.723 Hz
+Total assignment cost: 4.15375e-13
+Solving frequency = 214.777 Hz
+Total assignment cost: 4.18727e-13
+Solving frequency = 209.952 Hz
+Total assignment cost: 4.18445e-13
+Solving frequency = 201.045 Hz
+Total assignment cost: 4.12498e-13
+Solving frequency = 178.731 Hz
+Total assignment cost: 3.98168e-13
+Solving frequency = 208.377 Hz
+Total assignment cost: 3.75837e-13
+Solving frequency = 216.403 Hz
+Total assignment cost: 3.55363e-13
+Solving frequency = 213.356 Hz
+Total assignment cost: 3.37268e-13
+Solving frequency = 226.603 Hz
+Total assignment cost: 3.22816e-13
+Solving frequency = 350.877 Hz
+Total assignment cost: 3.21199e-13
+Solving frequency = 211.64 Hz
+Total assignment cost: 3.18517e-13
+Solving frequency = 210.793 Hz
+Total assignment cost: 3.06933e-13
+Solving frequency = 300.933 Hz
+Total assignment cost: 2.9315e-13
+Solving frequency = 190.694 Hz
+No collisions found!
+All the vehicles reached their goals!
+
+Total reallocations performed: 2
+Writing solution to text file...
+Writing goals to text file...
