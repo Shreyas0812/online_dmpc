@@ -1,0 +1,8 @@
+Scenario 1: 
+Goal: Robots initially assigned to swap diagonally - should trigger obvious reallocation.
+
+Scenario 2:
+Goal: More complex with random positions.
+
+Scenario 3:
+Goal: Test with more agents in same space.

@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/cpp/bin/run",
-            "args": [],
+            "args": ["../config/config.json"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/cpp/bin",
             "environment": [],
