@@ -27,20 +27,20 @@
   
   "solver": "qpoases",
   "motion_type": "static",
-  "d": 2,
+  "d": 5,
   "num_segments": 3,
   "dim": 3,
-  "deg_poly": 1,
-  "t_segment": 1.0,
+  "deg_poly": 3,
+  "t_segment": 0.5,
   
   "zeta_xy": 0.7,
   "tau_xy": 0.2,
   "zeta_z": 0.7,
   "tau_z": 0.2,
   
-  "h": 0.2,
-  "ts": 0.05,
-  "k_hor": 15,
+  "h": 0.1,
+  "ts": 0.01,
+  "k_hor": 16,
   
   "s_free": 100.0,
   "s_obs": 50.0,
@@ -48,7 +48,7 @@
   "spd_f": 5,
   "spd_o": 3,
   "spd_r": 2,
-  "lin_coll": 50000.0,
+  "lin_coll": -100000,
   "quad_coll": 1.0,
   "acc_cost": 0.008,
   
