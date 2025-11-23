@@ -37,7 +37,7 @@ config
             # Modify reallocation_enabled based on method
             if [ "$method" == "static" ]; then
                 # Disable reallocation
-                echo "Disabling reallocation in config."
+                echo "Disabling reallocaOUT_DIRtion in config."
                 cat "$CONFIG_FILE" | sed 's/"reallocation_enabled": true/"reallocation_enabled": false/' > "$OUTPUT_CONFIG_FILE"
             else
                 # Keep reallocation enabled
@@ -58,6 +58,19 @@ config['output_goals_paths'] = ['${OUTPUT_DIR}goals.txt']
 with open('${OUTPUT_CONFIG_FILE}', 'w') as f:
     json.dump(config, f, indent=2)
 "
+
+        # Run Simulation
+        cd "$SCRIPT_DIR/cpp/bin/"
+        ./run "${OUTPUT_CONFIG_FILE}" > "${OUTPUT_DIR}console.log" 2>&1
+
+        # Copy reallocation log if it exists
+        if [ -f "$SCRIPT_DIR/cpp/bin/reallocation_log.csv" ]; then
+            cp "$SCRIPT_DIR/cpp/bin/reallocation_log.csv" "${OUTPUT_DIR}reallocation_log.csv"
+        fi
+
+        cd $SCRIPT_DIR
+
+        echo "Experiment complete. Results saved in: $OUTPUT_DIR"
         done
     done
 done
