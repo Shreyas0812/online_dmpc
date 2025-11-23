@@ -24,3 +24,5 @@ matlab/data/
 # .vscode/
 
 .vscode/settings.json
+
+cpp/results/experiments/
