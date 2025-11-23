@@ -37,7 +37,7 @@ config
             # Modify reallocation_enabled based on method
             if [ "$method" == "static" ]; then
                 # Disable reallocation
-                echo "Disabling reallocaOUT_DIRtion in config."
+                echo "Disabling reallocation in config."
                 cat "$CONFIG_FILE" | sed 's/"reallocation_enabled": true/"reallocation_enabled": false/' > "$OUTPUT_CONFIG_FILE"
             else
                 # Keep reallocation enabled
