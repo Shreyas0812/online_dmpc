@@ -6,9 +6,9 @@ RUNS=3
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $SCRIPT_DIR
-
 echo $SCRIPT_DIR
+cd $SCRIPT_DIR
+mkdir -p "$SCRIPT_DIR/cpp/results/experiments/"
 
 for scenario in "${SCENARIOS[@]}"; do
     for method in "${METHODS[@]}"; do
@@ -19,7 +19,45 @@ for scenario in "${SCENARIOS[@]}"; do
             echo "=========================================="
 
             # Create output directory
-            # OUTPUT_DIR="./results/experiments/${scenario}/${method}/run_${run}/"
+            OUTPUT_DIR="$SCRIPT_DIR/cpp/results/experiments/${scenario}/${method}/run_${run}/"
+            echo "Creating output directory: $OUTPUT_DIR"
+            mkdir -p "$OUTPUT_DIR"
+
+            # Copy config file and modify for this run
+            CONFIG_FILE="$SCRIPT_DIR/cpp/config/${scenario}.json"
+            OUTPUT_CONFIG_FILE="$OUTPUT_DIR/config.json"
+            echo "Using config file: $CONFIG_FILE"
+config
+            # Check if config file exists
+            if [ ! -f "$CONFIG_FILE" ]; then
+                echo "ERROR: Config file not found: $CONFIG_FILE"
+                continue
+            fi
+
+            # Modify reallocation_enabled based on method
+            if [ "$method" == "static" ]; then
+                # Disable reallocation
+                echo "Disabling reallocation in config."
+                cat "$CONFIG_FILE" | sed 's/"reallocation_enabled": true/"reallocation_enabled": false/' > "$OUTPUT_CONFIG_FILE"
+            else
+                # Keep reallocation enabled
+                echo "Enabling reallocation in config."
+                cp "$CONFIG_FILE" "$OUTPUT_CONFIG_FILE"
+            fi
+
+            # Update output paths in config using Python
+            python3 -c "
+import json
+
+with open('${OUTPUT_CONFIG_FILE}', 'r') as f:
+    config = json.load(f)
+
+config['output_trajectories_paths'] = ['${OUTPUT_DIR}trajectories.txt']
+config['output_goals_paths'] = ['${OUTPUT_DIR}goals.txt']
+
+with open('${OUTPUT_CONFIG_FILE}', 'w') as f:
+    json.dump(config, f, indent=2)
+"
         done
     done
 done
@@ -30,4 +68,4 @@ echo ""
 echo "=========================================="
 echo "ALL EXPERIMENTS COMPLETE!"
 echo "=========================================="
-echo "Results saved in: ../results/experiments/"
+echo "Results saved in: $SCRIPT_DIR/cpp/results/experiments/"

@@ -1,0 +1,121 @@
+{
+  "test": "default",
+  "N": 4,
+  "Ncmd": 4,
+  "po": [
+    [
+      0.5,
+      0.5,
+      1.0
+    ],
+    [
+      2.5,
+      0.5,
+      1.0
+    ],
+    [
+      2.5,
+      2.5,
+      1.0
+    ],
+    [
+      0.5,
+      2.5,
+      1.0
+    ]
+  ],
+  "pf": [
+    [
+      2.5,
+      2.5,
+      1.0
+    ],
+    [
+      0.5,
+      2.5,
+      1.0
+    ],
+    [
+      0.5,
+      0.5,
+      1.0
+    ],
+    [
+      2.5,
+      0.5,
+      1.0
+    ]
+  ],
+  "solver": "qpoases",
+  "motion_type": "static",
+  "d": 5,
+  "num_segments": 3,
+  "dim": 3,
+  "deg_poly": 3,
+  "t_segment": 0.5,
+  "zeta_xy": 0.7,
+  "tau_xy": 0.2,
+  "zeta_z": 0.7,
+  "tau_z": 0.2,
+  "h": 0.1,
+  "ts": 0.01,
+  "k_hor": 16,
+  "s_free": 100.0,
+  "s_obs": 50.0,
+  "s_repel": 10.0,
+  "spd_f": 5,
+  "spd_o": 3,
+  "spd_r": 2,
+  "lin_coll": -100000,
+  "quad_coll": 1.0,
+  "acc_cost": 0.008,
+  "pmin": [
+    -0.5,
+    -0.5,
+    0.0
+  ],
+  "pmax": [
+    3.5,
+    3.5,
+    2.5
+  ],
+  "amin": [
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "amax": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "order": 2,
+  "rmin": 0.3,
+  "height_scaling": 3.0,
+  "order_obs": 2,
+  "rmin_obs": 0.5,
+  "height_scaling_obs": 3.0,
+  "std_position": 0.0,
+  "std_velocity": 0.0,
+  "max_clusters": 1,
+  "max_cost_threshold": 0.08,
+  "min_cost_threshold": -0.01,
+  "goal_region_radius": 0.1,
+  "goal_region_is_region": false,
+  "goal_circular_radius": 2.0,
+  "goal_circular_omega": 0.5,
+  "goal_translation_velocity": 0.5,
+  "simulation_duration": 25,
+  "output_trajectories_paths": [
+    "/home/shreyas/Documents/MEAM5170_Controls/Project/online_dmpc/cpp/results/experiments/scenario_1/static/run_3/trajectories.txt"
+  ],
+  "output_goals_paths": [
+    "/home/shreyas/Documents/MEAM5170_Controls/Project/online_dmpc/cpp/results/experiments/scenario_1/static/run_3/goals.txt"
+  ],
+  "collision_check_rmin": 0.15,
+  "collision_check_order": 2,
+  "collision_check_height_scaling": 3.0,
+  "goal_tolerance": 0.15,
+  "reallocation_enabled": false,
+  "reallocation_period": 2.0
+}
