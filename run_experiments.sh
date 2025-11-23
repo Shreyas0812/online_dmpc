@@ -27,7 +27,7 @@ for scenario in "${SCENARIOS[@]}"; do
             CONFIG_FILE="$SCRIPT_DIR/cpp/config/${scenario}.json"
             OUTPUT_CONFIG_FILE="$OUTPUT_DIR/config.json"
             echo "Using config file: $CONFIG_FILE"
-config
+
             # Check if config file exists
             if [ ! -f "$CONFIG_FILE" ]; then
                 echo "ERROR: Config file not found: $CONFIG_FILE"
