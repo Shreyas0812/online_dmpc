@@ -45,7 +45,8 @@ add_library(model
 	src/model.cpp)
 
 add_library(avoidance
-		src/avoidance.cpp)
+		src/avoidance.cpp
+		src/bvc_avoidance.cpp)
 
 add_library(solver
 		src/solver.cpp)

@@ -44,6 +44,7 @@ public:
         MpcParams mpc_params;
         Eigen::MatrixXd po, pf;
         Solver solver_name;
+        std::string collision_method;
         std::string motion_type;
         int max_clusters;
         double max_cost_threshold;
@@ -82,6 +83,7 @@ private:
     int _deg_poly;
 
     Solver _solver_name;
+    std::string collision_method;
     std::string _motion_type;
 
     double _lin_coll;

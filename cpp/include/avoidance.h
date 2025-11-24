@@ -65,4 +65,31 @@ private:
                                                  const State3D& state);
 };
 
+
+class BVCAvoider : public BaseAvoider {
+public:
+    BVCAvoider (const std::vector<Eigen::MatrixXd>& horizon, 
+                const Eigen::MatrixXd& Phi_pos,
+                const std::vector<EllipseParams>& p,
+                int deg_poly);
+
+    ~BVCAvoider(){};
+
+    std::vector<Ellipse> getEllipses() override { return _ellipse; }
+    Constraint getCollisionConstraint(const State3D& state, int agent_id) override;
+
+private:
+    std::vector<Ellipse> _ellipse;
+
+    const std::vector<Eigen::MatrixXd>& _horizon;
+    const Eigen::MatrixXd& _Phi_pos;
+
+    int _k_hor;
+    int _N;
+    int _dim;
+    int _deg_poly;
+
+    Constraint buildBVCConstraintForAgent(int agent_id, const State3D& state);
+};
+
 #endif //ONLINE_PLANNING_AVOIDANCE_H

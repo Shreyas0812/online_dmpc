@@ -135,6 +135,9 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     _pos_std = j["std_position"];
     _vel_std = j["std_velocity"];
 
+    // Collision avoidance method
+    std::string collision_method = j.value("collision_method", "ONDemand");
+    
     // Motion type for goal movement
     std::string motion_type = j.value("motion_type", "circular");
     
@@ -189,7 +192,7 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     else throw std::invalid_argument("Invalid test type '" + test_type + " '");
 
     Generator::Params p = {_bezier_params, _model_params, ellipse_vec,
-                           _mpc_params, _po, _pf, qp_solver, motion_type,
+                           _mpc_params, _po, _pf, qp_solver, collision_method, motion_type,
                            max_clusters, max_cost_threshold, min_cost_threshold,
                            goal_region_radius, goal_region_is_region,
                            goal_circular_radius, goal_circular_omega, goal_translation_velocity};

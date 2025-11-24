@@ -85,8 +85,26 @@ Generator::Generator(const Generator::Params& p) :
     initGenerator();
 
     // Create the avoider object for collision avoidance
-    _avoider = std::make_unique<OndemandAvoider>(_oldhorizon, _Phi_pred.pos,
-                                                 _A0_pred.pos, p.ellipse);
+
+    std::string collision_method = p.collision_method;
+
+    if (collision_method == "BVC") {
+        _avoider = std::make_unique<BVCAvoider>(
+                _oldhorizon, 
+                _Phi_pred.pos,
+                p.ellipse, 
+                p.bezier_params.deg_poly);
+        
+        std::cout << "Using BVC for collision avoidance." << std::endl;
+    }
+    else {
+        _avoider = std::make_unique<OndemandAvoider>(
+            _oldhorizon,
+            _Phi_pred.pos,
+            _A0_pred.pos, 
+            p.ellipse);
+        std::cout << "Using ONDemand for collision avoidance." << std::endl;
+    }
     
     // Initialize moving goals with final positions
     _moving_goals.resize(_Ncmd);
