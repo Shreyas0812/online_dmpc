@@ -65,6 +65,13 @@ public:
     std::vector<Eigen::MatrixXd> getNextGoals(){
         return _next_goals;
     };
+    
+    Eigen::MatrixXd getNewHorizon(int agent_id) const {
+        if (agent_id >= 0 && agent_id < _newhorizon.size()) {
+            return _newhorizon[agent_id];
+        }
+        return Eigen::MatrixXd();
+    }
 
     void setGoalRegion(int agent_id, const Eigen::VectorXd& center, double radius);
     void setGoalPoint(int agent_id, const Eigen::VectorXd& point);

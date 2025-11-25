@@ -84,6 +84,8 @@ private:
     std::unique_ptr<TaskReallocationManager> _reallocation_manager;
     bool _reallocation_enabled;
     double _reallocation_period;
+    bool _use_predictive;
+    double _prediction_horizon;
     std::vector<int> _current_assignment;
     std::vector<Eigen::Vector3d> _original_goals_vec;
 };

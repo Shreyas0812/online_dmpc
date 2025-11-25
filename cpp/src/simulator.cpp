@@ -43,8 +43,8 @@ Simulator::Simulator(std::ifstream& config_file) {
     }
 
     if (_reallocation_enabled) {
-        _reallocation_manager = std::make_unique<TaskReallocationManager>(_reallocation_period);
-        std::cout << "Task reallocation ENABLED (period: " << _reallocation_period << "s)" << std::endl;
+        _reallocation_manager = std::make_unique<TaskReallocationManager>(_reallocation_period, _use_predictive, _prediction_horizon);
+        std::cout << "Task reallocation ENABLED (period: " << _reallocation_period << "s, predictive: " << (_use_predictive ? "YES" : "NO") << ")" << std::endl;
     } else {
         std::cout << "Task reallocation DISABLED" << std::endl;
     }
@@ -158,9 +158,13 @@ Generator::Params Simulator::parseJSON(std::ifstream& config_file) {
     // Parse reallocation parameters
     _reallocation_enabled = j.value("reallocation_enabled", false);
     _reallocation_period = j.value("reallocation_period", 2.0);
+    _use_predictive = j.value("_use_predictive", false);
+    _prediction_horizon = j.value("_prediction_horizon", 1.0);
     
     std::cout << "Config: reallocation_enabled = " << _reallocation_enabled << std::endl;
     std::cout << "Config: reallocation_period = " << _reallocation_period << std::endl;
+    std::cout << "Config: _use_predictive = " << _use_predictive << std::endl;
+    std::cout << "Config: _prediction_horizon = " << _prediction_horizon << std::endl;
 
     // Generate the test
     std::string test_type =  j["test"];
@@ -229,12 +233,20 @@ void Simulator::run(int duration) {
                     agent_positions.push_back(_current_states[i].pos);
                 }
 
+                // Get predicted horizons (full trajectories) for each agent
+                std::vector<Eigen::MatrixXd> predicted_horizons;
+                for (int i=0; i < _Ncmd; i++) {
+                    predicted_horizons.push_back(_generator->getNewHorizon(i));
+                }
+
                 // Attempt reallocation
                 bool assignment_changed = _reallocation_manager->updateAssignment(
                     current_time,
                     agent_positions,
+                    predicted_horizons,
                     _original_goals_vec,
-                    _current_assignment
+                    _current_assignment,
+                    _Ts
                 );
                 
                 if (assignment_changed) {

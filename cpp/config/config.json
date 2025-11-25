@@ -87,6 +87,8 @@
 
   "reallocation_enabled": true,
   "reallocation_period": 2.0,
+  "_use_predictive": true,
+  "_prediction_horizon": 1.0,
 
   "collision_method": "BVC",
   "motion_type": "translating",

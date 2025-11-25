@@ -54,6 +54,9 @@ add_library(solver
 add_library(generator
 	src/generator.cpp)
 
+add_library(task_reallocation
+	src/task_reallocation.cpp)
+
 add_library(simulator
 	src/simulator.cpp)
 
@@ -67,7 +70,9 @@ target_link_libraries(generator
 	model)
 
 target_link_libraries(simulator
-	generator)
+	generator
+	task_reallocation
+	hungarian)
 
 target_link_libraries(run
 	simulator
