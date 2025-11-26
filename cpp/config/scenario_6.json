@@ -1,35 +1,34 @@
 {
-  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
-  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
-  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "_comment": "SCENARIO 6: Dense Collision Method Stress Test",
+  "_description": "Dense cross pattern (3x3m) that will be tested with BOTH BVC and on-demand methods via shell script parameter variation. At high density, collision method choice becomes critical. This tests whether reallocation remains beneficial regardless of collision strategy when agents are forced into close proximity.",
+  "_expected_outcome": "At high density, we expect: (1) BVC may struggle due to conservative nature, (2) On-demand may handle density better, (3) Reallocation could be game-changer for BVC but marginal for on-demand",
+  "_key_insight": "This scenario reveals whether reallocation can compensate for limitations of conservative collision methods",
   
   "N": 4,
   "Ncmd": 4,
-  "test": "default",
+  "test": "scenario_6_dense_collision_test",
   "solver": "qpoases",
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories_scenario_1.txt",
-    "../../../SwarmSync/trajectories_scenario_1.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals_scenario_1.txt",
-    "../../../SwarmSync/goals_scenario_1.txt"
+    "../results/goals.txt"
   ],
 
   "po": [
-    [0.0, 0.0, 1.0],
-    [4.0, 0.0, 1.0],
-    [4.0, 4.0, 1.0],
-    [0.0, 4.0, 1.0]
+    [0.5, 0.5, 1.0],
+    [2.5, 0.5, 1.0],
+    [2.5, 2.5, 1.0],
+    [0.5, 2.5, 1.0]
   ],
 
   "pf": [
-    [4.0, 4.0, 1.0],
-    [0.0, 4.0, 1.0],
-    [0.0, 0.0, 1.0],
-    [4.0, 0.0, 1.0]
+    [2.5, 2.5, 1.0],
+    [0.5, 2.5, 1.0],
+    [0.5, 0.5, 1.0],
+    [2.5, 0.5, 1.0]
   ],
 
   "d": 5,
@@ -57,8 +56,8 @@
   "quad_coll": 1,
   "acc_cost": 0.015,
 
-  "pmin": [-0.5, -0.5, 0.2],
-  "pmax": [4.5, 4.5, 2.0],
+  "pmin": [0.0, 0.0, 0.2],
+  "pmax": [3.0, 3.0, 1.8],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
 

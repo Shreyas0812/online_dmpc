@@ -1,10 +1,14 @@
 {
-  "N": 4, 
+  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
+  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
+  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  
+  "N": 4,
   "Ncmd": 4,
   "test": "default",
   "solver": "qpoases",
   
-  "simulation_duration": 75,
+  "simulation_duration": 60,
   "output_trajectories_paths": [
     "../results/trajectories.txt",
     "../../../SwarmSync/trajectories.txt"
@@ -16,16 +20,16 @@
 
   "po": [
     [0.0, 0.0, 1.0],
-    [2.0, 0.0, 1.0],
-    [2.0, 2.0, 1.0],
-    [0.0, 2.0, 1.0]
+    [4.0, 0.0, 1.0],
+    [4.0, 4.0, 1.0],
+    [0.0, 4.0, 1.0]
   ],
 
   "pf": [
-    [2.0, 2.0, 1.0],
-    [0.0, 2.0, 1.0],
+    [4.0, 4.0, 1.0],
+    [0.0, 4.0, 1.0],
     [0.0, 0.0, 1.0],
-    [2.0, 0.0, 1.0]
+    [4.0, 0.0, 1.0]
   ],
 
   "d": 5,
@@ -53,8 +57,8 @@
   "quad_coll": 1,
   "acc_cost": 0.015,
 
-  "pmin": [-1.5, -1.5, 0.2],
-  "pmax": [10.5, 10.5, 10.5],
+  "pmin": [-0.5, -0.5, 0.2],
+  "pmax": [4.5, 4.5, 2.0],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
 
@@ -72,7 +76,7 @@
   "collision_check_rmin": 0.15,
   "collision_check_order": 2,
   "collision_check_height_scaling": 3.0,
-  "goal_tolerance": 0.1,
+  "goal_tolerance": 0.15,
 
   "max_clusters": 1,
   "max_cost_threshold": 0.08,
@@ -90,8 +94,8 @@
   "_use_predictive": true,
   "_prediction_horizon": 1.0,
 
-  "collision_method": "BVC",
-  "motion_type": "translating",
+  "collision_method": "on-demand",
+  "motion_type": "static",
 
   "motion_type1": "circular",
   "motion_type2": "translating",

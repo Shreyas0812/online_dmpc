@@ -1,21 +1,20 @@
 {
-  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
-  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
-  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "_comment": "SCENARIO 4: Cross Pattern with BVC - Conservative Collision Avoidance",
+  "_description": "Same as Scenario 1 but uses BVC collision avoidance. BVC allocates exclusive space to each agent, making it more conservative but safer. Tests whether reallocation provides MORE benefit when collision method is conservative.",
+  "_expected_outcome": "Since BVC is conservative and agents take wider paths, reallocation might provide GREATER benefit here compared to on-demand methods",
+  "_comparison": "Compare with Scenario 5 (same geometry, on-demand) to isolate collision method effect",
   
   "N": 4,
   "Ncmd": 4,
-  "test": "default",
+  "test": "scenario_4_cross_bvc",
   "solver": "qpoases",
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories_scenario_1.txt",
-    "../../../SwarmSync/trajectories_scenario_1.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals_scenario_1.txt",
-    "../../../SwarmSync/goals_scenario_1.txt"
+    "../results/goals.txt"
   ],
 
   "po": [
@@ -94,7 +93,7 @@
   "_use_predictive": true,
   "_prediction_horizon": 1.0,
 
-  "collision_method": "on-demand",
+  "collision_method": "BVC",
   "motion_type": "static",
 
   "motion_type1": "circular",

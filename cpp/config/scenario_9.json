@@ -1,0 +1,106 @@
+{
+  "_comment": "SCENARIO 9: Combined Circular-Translating Motion - Ultimate Dynamic Challenge",
+  "_description": "Goals simultaneously orbit in circles AND translate linearly. This creates the most complex goal motion pattern in our test suite. Goals are moving in curved paths through space, combining both rotational and translational motion components. This is the ultimate test of predictive reallocation capability.",
+  "_expected_outcome": "This will stress-test the limits of predictive reallocation. If predictive reallocation can handle this scenario effectively, it proves the approach is truly robust for dynamic multi-agent systems",
+  "_key_challenge": "Goals have complex 3D motion with both angular and linear velocity components. Prediction requires accurately modeling both motion types simultaneously. The longer prediction horizon (1.5s) is critical here to capture the full motion arc.",
+  "_paper_contribution": "Strongest demonstration that reallocation works for highly dynamic systems. If you can handle this, you've shown a significant advancement over static assignment methods",
+  "_real_world_analogy": "Think of coordinating drones to track cars driving through a spiral parking garage, or robots following objects on a complex conveyor system with both rotations and translations",
+  "_failure_case_analysis": "If reallocation HURTS performance here, that's also valuable data - it tells us the limits of the approach and helps define when simpler methods should be preferred",
+  
+  "N": 4,
+  "Ncmd": 4,
+  "test": "scenario_9_combined_motion",
+  "solver": "qpoases",
+  
+  "simulation_duration": 70,
+  "output_trajectories_paths": [
+    "../results/trajectories.txt"
+  ],
+  "output_goals_paths": [
+    "../results/goals.txt"
+  ],
+
+  "po": [
+    [0.0, 0.0, 1.0],
+    [4.0, 0.0, 1.0],
+    [4.0, 4.0, 1.0],
+    [0.0, 4.0, 1.0]
+  ],
+
+  "pf": [
+    [4.0, 4.0, 1.0],
+    [0.0, 4.0, 1.0],
+    [0.0, 0.0, 1.0],
+    [4.0, 0.0, 1.0]
+  ],
+
+  "d": 5,
+  "num_segments": 3,
+  "deg_poly": 3,
+  "dim": 3,
+  "t_segment": 0.5,
+
+  "zeta_xy": 0.6502,
+  "tau_xy": 0.3815,
+  "zeta_z": 0.9103,
+  "tau_z": 0.3,
+
+  "k_hor": 16,
+  "h": 0.1,
+  "ts": 0.01,
+
+  "s_free": 100,
+  "s_obs": 100,
+  "s_repel": 1000,
+  "spd_f": 3,
+  "spd_o": 1,
+  "spd_r": 10,
+  "lin_coll": -100000,
+  "quad_coll": 1,
+  "acc_cost": 0.015,
+
+  "pmin": [-0.5, -0.5, 0.2],
+  "pmax": [4.5, 4.5, 2.0],
+  "amin": [-1.0, -1.0, -1.0],
+  "amax": [1.0, 1.0, 1.0],
+
+  "rmin": 0.3,
+  "order": 2,
+  "height_scaling": 1.2,
+
+  "rmin_obs": 0.5,
+  "order_obs": 2,
+  "height_scaling_obs": 2.0,
+
+  "std_position": 0.00228682,
+  "std_velocity": 0.0109302,
+
+  "collision_check_rmin": 0.15,
+  "collision_check_order": 2,
+  "collision_check_height_scaling": 3.0,
+  "goal_tolerance": 0.15,
+
+  "max_clusters": 1,
+  "max_cost_threshold": 0.08,
+  "min_cost_threshold": -0.01,
+
+  "goal_region_radius": 0.5,
+  "goal_region_is_region": false,
+
+  "goal_circular_radius": 1.5,
+  "goal_circular_omega": 0.4,
+  "goal_translation_velocity": 0.15,
+
+  "reallocation_enabled": true,
+  "reallocation_period": 2.0,
+  "_use_predictive": true,
+  "_prediction_horizon": 1.5,
+
+  "collision_method": "on-demand",
+  "motion_type": "circular_translating",
+
+  "motion_type1": "circular",
+  "motion_type2": "translating",
+  "motion_type3": "circular_translating",
+  "motion_type4": "static"
+}

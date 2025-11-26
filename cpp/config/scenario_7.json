@@ -1,21 +1,21 @@
 {
-  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
-  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
-  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "_comment": "SCENARIO 7: Translating Goals - Dynamic Target Tracking",
+  "_description": "Goals move in straight lines at constant velocity (0.2 m/s). Agents must track moving targets while avoiding each other and coordinating assignments. This extends the applicability of the reallocation approach beyond static goals to real-world scenarios where targets may be moving (tracking, interception, formation changes).",
+  "_expected_outcome": "Predictive reallocation should shine here - it can anticipate where goals will be and optimize assignments based on future positions rather than current positions",
+  "_key_challenge": "Agents must balance pursuing moving targets with collision avoidance and potential reassignment",
+  "_paper_contribution": "Demonstrates that task reallocation works for dynamic multi-agent systems, not just static goal assignments",
   
   "N": 4,
   "Ncmd": 4,
-  "test": "default",
+  "test": "scenario_7_translating_goals",
   "solver": "qpoases",
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories_scenario_1.txt",
-    "../../../SwarmSync/trajectories_scenario_1.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals_scenario_1.txt",
-    "../../../SwarmSync/goals_scenario_1.txt"
+    "../results/goals.txt"
   ],
 
   "po": [
@@ -95,7 +95,7 @@
   "_prediction_horizon": 1.0,
 
   "collision_method": "on-demand",
-  "motion_type": "static",
+  "motion_type": "translating",
 
   "motion_type1": "circular",
   "motion_type2": "translating",

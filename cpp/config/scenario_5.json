@@ -1,21 +1,21 @@
 {
-  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
-  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
-  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "_comment": "SCENARIO 5: Cross Pattern with On-Demand - Aggressive Collision Avoidance",
+  "_description": "Identical spatial configuration to Scenario 4 but uses on-demand collision avoidance. On-demand only avoids when absolutely necessary, allowing tighter coordination and more efficient paths.",
+  "_expected_outcome": "On-demand baseline should already be efficient. Question: does reallocation still provide significant benefit when collision method is already aggressive?",
+  "_comparison": "Direct comparison with Scenario 4 (BVC) reveals collision method × reallocation interaction effects",
+  "_hypothesis": "Reallocation benefit may be smaller here since on-demand already optimizes path efficiency",
   
   "N": 4,
   "Ncmd": 4,
-  "test": "default",
+  "test": "scenario_5_cross_ondemand",
   "solver": "qpoases",
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories_scenario_1.txt",
-    "../../../SwarmSync/trajectories_scenario_1.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals_scenario_1.txt",
-    "../../../SwarmSync/goals_scenario_1.txt"
+    "../results/goals.txt"
   ],
 
   "po": [

@@ -1,8 +1,89 @@
-Scenario 1: 
-Goal: Robots initially assigned to swap diagonally - should trigger obvious reallocation.
+Reallocation vs No-Reallocation
 
-Scenario 2:
-Goal: More complex with random positions.
+File Name: scenario_1.json
 
-Scenario 3:
-Goal: Test with more agents in same space.
+Cross Pattern - Clear Benefit
+
+Four agents start in corners of a 4×4m square and need to swap diagonally.
+
+File Name: scenario_2.json
+
+Dense Cross Pattern - Moderate Conflict
+
+This increases agent density and makes collision avoidance more challenging
+
+File Name: scenario_3.json
+
+Circle Formation - High Conflict
+
+Four agents arranged in a circle need to rotate to positions 90 degrees clockwise. This creates maximum path crossing - every agent's path intersects with every other agent's path
+
+
+BVC vs On-Demand
+
+File Name: scenario_4.json
+
+Cross Pattern with BVC
+
+Same as Scenario 1 but explicitly forcing BVC collision avoidance. BVC is conservative - it allocates exclusive space to each agent. This means agents take wider paths to avoid each other.
+
+
+File Name: scenario_5.json
+
+Cross Pattern with On-Demand
+
+Same spatial configuration but with on-demand collision avoidance. On-demand only avoids when necessary, allowing tighter coordination.
+
+
+'''
+By comparing scenarios 4 and 5, you can claim: "Reallocation provided X% improvement with BVC but only Y% with on-demand, suggesting that conservative collision methods benefit more from optimized task assignment
+'''
+
+
+File Name: scenario_6.json
+
+Dense Pattern - Collision Method Comparison
+
+Higher density version (6 agents in 4×4m space) to really stress-test the interaction between collision method and reallocation.
+
+
+Moving Targets
+
+File Name: scenario_7.json
+
+Translating Goals
+
+Goals move in straight lines at constant velocity. Agents must track moving targets while avoiding each other.
+
+
+File Name: scenario_8.json
+
+Circular Goals
+
+Goals orbit in circles around fixed centers. More complex motion pattern than straight lines.
+
+File Name: scenario_9.json
+
+Combined Motion Goals
+
+Goals both translate AND rotate
+
+
+
+
+----------------------------
+
+PARAMETER SENSITIVITY (10-12): Tuning Analysis
+Scenario 10: "Reallocation Period Sweep"
+Fixed scenario, varying reallocation_period: 0.5s, 1.0s, 2.0s, 4.0s, never (static)
+Why this matters: Helps readers understand the trade-off between reallocation frequency and performance. Too frequent = computational overhead. Too rare = missed opportunities.
+Scenario 11: "Prediction Horizon Sweep"
+Fixed scenario, varying _prediction_horizon: 0.5s, 1.0s, 2.0s, 3.0s
+Why this matters: Shows how far ahead you need to predict for effective reallocation. Too short = not better than reactive. Too long = predictions become inaccurate.
+Scenario 12: "Combined Parameter Analysis"
+Tests interaction between prediction horizon and reallocation period. This is your "heat map" scenario - you can create a 2D plot showing optimal parameter combinations.
+
+bash run_comprehensive_experiments.sh collision    # Robustness
+bash run_comprehensive_experiments.sh dynamic      # Novel capability
+bash run_comprehensive_experiments.sh sensitivity  # Parameter tuning
+----------------------------

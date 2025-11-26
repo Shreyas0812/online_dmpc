@@ -1,90 +1,102 @@
 {
-  "test": "default",
-  "N": 8,
-  "Ncmd": 8,
+  "_comment": "SCENARIO 3: Circle Formation - High Conflict",
+  "_description": "Four agents arranged in a circle rotate 90 degrees clockwise. Creates maximum path crossing where every agent's path intersects all others in the center. Ultimate stress test.",
+  "_expected_outcome": "This is the hardest scenario. If reallocation helps here, method is truly robust. If it hurts performance, we've identified an important limitation.",
   
-  "po": [
-    [0.5, 0.5, 1.0],
-    [1.5, 0.5, 1.0],
-    [2.5, 0.5, 1.0],
-    [0.5, 1.5, 1.0],
-    [2.5, 1.5, 1.0],
-    [0.5, 2.5, 1.0],
-    [1.5, 2.5, 1.0],
-    [2.5, 2.5, 1.0]
-  ],
-  
-  "pf": [
-    [2.5, 2.5, 1.0],
-    [1.5, 2.5, 1.0],
-    [0.5, 2.5, 1.0],
-    [2.5, 1.5, 1.0],
-    [0.5, 1.5, 1.0],
-    [2.5, 0.5, 1.0],
-    [1.5, 0.5, 1.0],
-    [0.5, 0.5, 1.0]
-  ],
-  
+  "N": 4,
+  "Ncmd": 4,
+  "test": "scenario_3_circle_formation",
   "solver": "qpoases",
-  "motion_type": "static",
+  
+  "simulation_duration": 60,
+  "output_trajectories_paths": [
+    "../results/trajectories.txt"
+  ],
+  "output_goals_paths": [
+    "../results/goals.txt"
+  ],
+
+  "po": [
+    [2.0, 1.0, 1.0],
+    [3.0, 2.0, 1.0],
+    [2.0, 3.0, 1.0],
+    [1.0, 2.0, 1.0]
+  ],
+
+  "pf": [
+    [3.0, 2.0, 1.0],
+    [2.0, 3.0, 1.0],
+    [1.0, 2.0, 1.0],
+    [2.0, 1.0, 1.0]
+  ],
+
   "d": 5,
   "num_segments": 3,
-  "dim": 3,
   "deg_poly": 3,
+  "dim": 3,
   "t_segment": 0.5,
-  
-  "zeta_xy": 0.7,
-  "tau_xy": 0.2,
-  "zeta_z": 0.7,
-  "tau_z": 0.2,
-  
+
+  "zeta_xy": 0.6502,
+  "tau_xy": 0.3815,
+  "zeta_z": 0.9103,
+  "tau_z": 0.3,
+
+  "k_hor": 16,
   "h": 0.1,
   "ts": 0.01,
-  "k_hor": 16,
-  
-  "s_free": 100.0,
-  "s_obs": 50.0,
-  "s_repel": 10.0,
-  "spd_f": 5,
-  "spd_o": 3,
-  "spd_r": 2,
+
+  "s_free": 100,
+  "s_obs": 100,
+  "s_repel": 1000,
+  "spd_f": 3,
+  "spd_o": 1,
+  "spd_r": 10,
   "lin_coll": -100000,
-  "quad_coll": 1.0,
-  "acc_cost": 0.008,
-  
-  "pmin": [-0.5, -0.5, 0.0],
-  "pmax": [3.5, 3.5, 2.5],
+  "quad_coll": 1,
+  "acc_cost": 0.015,
+
+  "pmin": [0.0, 0.0, 0.2],
+  "pmax": [4.0, 4.0, 2.0],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
-  
-  "order": 2,
+
   "rmin": 0.3,
-  "height_scaling": 3.0,
-  "order_obs": 2,
+  "order": 2,
+  "height_scaling": 1.2,
+
   "rmin_obs": 0.5,
-  "height_scaling_obs": 3.0,
-  
-  "std_position": 0.0,
-  "std_velocity": 0.0,
-  
-  "max_clusters": 1,
-  "max_cost_threshold": 0.08,
-  "min_cost_threshold": -0.01,
-  "goal_region_radius": 0.1,
-  "goal_region_is_region": false,
-  "goal_circular_radius": 2.0,
-  "goal_circular_omega": 0.5,
-  "goal_translation_velocity": 0.5,
-  
-  "simulation_duration": 35,
-  "output_trajectories_paths": ["../results/scenario_3_trajectories.txt", "../../../SwarmSync/scenario_3_trajectories.txt"],
-  "output_goals_paths": ["../results/scenario_3_goals.txt", "../../../SwarmSync/scenario_3_goals.txt"],
-  
+  "order_obs": 2,
+  "height_scaling_obs": 2.0,
+
+  "std_position": 0.00228682,
+  "std_velocity": 0.0109302,
+
   "collision_check_rmin": 0.15,
   "collision_check_order": 2,
   "collision_check_height_scaling": 3.0,
   "goal_tolerance": 0.15,
-  
+
+  "max_clusters": 1,
+  "max_cost_threshold": 0.08,
+  "min_cost_threshold": -0.01,
+
+  "goal_region_radius": 0.5,
+  "goal_region_is_region": false,
+
+  "goal_circular_radius": 2.0,
+  "goal_circular_omega": 0.5,
+  "goal_translation_velocity": 0.2,
+
   "reallocation_enabled": true,
-  "reallocation_period": 2.0
+  "reallocation_period": 2.0,
+  "_use_predictive": true,
+  "_prediction_horizon": 1.0,
+
+  "collision_method": "on-demand",
+  "motion_type": "static",
+
+  "motion_type1": "circular",
+  "motion_type2": "translating",
+  "motion_type3": "circular_translating",
+  "motion_type4": "static"
 }

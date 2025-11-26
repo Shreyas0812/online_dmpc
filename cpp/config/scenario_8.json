@@ -1,21 +1,22 @@
 {
-  "_comment": "SCENARIO 1: Cross Pattern - Clear Benefit Case",
-  "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
-  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "_comment": "SCENARIO 8: Circular Goals - Complex Motion Pattern Tracking",
+  "_description": "Goals orbit in circles around fixed center points at 0.5 rad/s (about 28 degrees per second). This creates a more complex and challenging motion pattern than straight-line translation. The circular motion means goal positions are continuously changing direction, which tests whether predictive reallocation can anticipate non-linear goal trajectories.",
+  "_expected_outcome": "Predictive reallocation with proper prediction horizon should significantly outperform reactive methods here, since anticipating circular motion allows better assignment optimization",
+  "_key_challenge": "Goals continuously change velocity direction. Your prediction horizon becomes crucial - too short and you can't anticipate the curve, too long and predictions become less accurate",
+  "_paper_contribution": "Shows the method works even with complex non-linear goal motion, extending beyond simple translation scenarios",
+  "_real_world_analogy": "Think of coordinating multiple drones to track moving vehicles that are turning, or robots following objects on a conveyor belt with curves",
   
   "N": 4,
   "Ncmd": 4,
-  "test": "default",
+  "test": "scenario_8_circular_goals",
   "solver": "qpoases",
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories_scenario_1.txt",
-    "../../../SwarmSync/trajectories_scenario_1.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals_scenario_1.txt",
-    "../../../SwarmSync/goals_scenario_1.txt"
+    "../results/goals.txt"
   ],
 
   "po": [
@@ -92,10 +93,10 @@
   "reallocation_enabled": true,
   "reallocation_period": 2.0,
   "_use_predictive": true,
-  "_prediction_horizon": 1.0,
+  "_prediction_horizon": 1.5,
 
   "collision_method": "on-demand",
-  "motion_type": "static",
+  "motion_type": "circular",
 
   "motion_type1": "circular",
   "motion_type2": "translating",
