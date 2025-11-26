@@ -8,7 +8,7 @@ TaskReallocationManager::TaskReallocationManager(
     double reallocation_period,
     bool use_predictive,
     double prediction_horizon)
-    : reallocation_period_(reallocation_period), last_reallocation_time_(0.0), reallocation_count_(0), _use_predictive(use_predictive), _prediction_horizon(prediction_horizon)
+    : reallocation_period_(reallocation_period), last_reallocation_time_(-reallocation_period), reallocation_count_(0), _use_predictive(use_predictive), _prediction_horizon(prediction_horizon)
 {
     log_file_.open("reallocation_log.csv");
     log_file_ << "timestamp,reallocation_id,agent_id,old_goal,new_goal,distance,method\n";
@@ -99,11 +99,13 @@ bool TaskReallocationManager::updateAssignment(
         new_assignment = computeOptimalAssignment(agent_positions, goal_positions);
     }
 
-    bool changed = false;
+    // Initialize current_assignment_ with the input assignment on first call
     if (current_assignment_.empty()) {
         current_assignment_ = assignment;
     }
 
+    // Check if assignment has changed
+    bool changed = false;
     for (size_t i = 0; i < new_assignment.size(); i++) {
         if (new_assignment[i] != current_assignment_[i]) {
             changed = true;

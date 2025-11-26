@@ -91,7 +91,7 @@
 
   "reallocation_enabled": true,
   "reallocation_period": 2.0,
-  "_use_predictive": true,
+  "_use_predictive": false,
   "_prediction_horizon": 1.0,
 
   "collision_method": "on-demand",

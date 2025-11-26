@@ -667,5 +667,7 @@ void Generator::setGoalPoint(int agent_id, const Eigen::VectorXd& point) {
         _goal_regions[agent_id].center = point;
         _goal_regions[agent_id].radius = 0.0;
         _goal_regions[agent_id].is_region = false;
+        
+        _original_goals[agent_id] = point;  // Also update the goal used in MPC optimization
     }
 }
