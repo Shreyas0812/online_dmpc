@@ -118,3 +118,82 @@ END_PYTHON
     echo "Experiment complete. Results saved in: $OUTPUT_DIR"
 }
 
+run_baseline_experiments() {
+    echo "Running Baseline Experiments"
+
+    BASELINE_SCENARIOS=("scenario_1" "scenario_2" "scenario_3")
+
+    for scenario in "${BASELINE_SCENARIOS[@]}"; do
+        echo ">>> Testing Scenario: $scenario"
+        
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "static" "$run" "reallocation_enabled:false"
+        done
+
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "reactive" "$run" "reallocation_enabled:true,_use_predictive:false,reallocation_period:2.0"
+        done
+
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "predictive" "$run" "reallocation_enabled:true,_use_predictive:true,reallocation_period:2.0,prediction_horizon:1.0"
+        done
+    done
+
+    echo "Baseline Experiments Completed"
+    echo " Total experiments run: $(( ${#BASELINE_SCENARIOS[@]} * 3 * RUNS ))"
+}
+
+run_collision_experiments() {
+    echo "Running Collision Method Comparison Experiments"
+
+    COLLISION_SCENARIOS=("scenario_4" "scenario_5" "scenario_6")
+    COLLISION_TYPES=("BVC" "ONDemand")
+
+    for scenario in "${COLLISION_SCENARIOS[@]}"; do
+        for collision_type in "${COLLISION_TYPES[@]}"; do
+            echo ">>> Testing Scenario: $scenario with Collision Type: $collision_type"
+            
+            # static method
+            for run in $(seq 1 $RUNS); do
+                run_single_experiment "$scenario" "static" "$run" "reallocation_enabled:false,collision_method:${collision_type}"
+            done
+
+            for run in $(seq 1 $RUNS); do
+                run_single_experiment "$scenario" "reactive" "$run" "reallocation_enabled:true,_use_predictive:false,reallocation_period:2.0,collision_method:${collision_type}"
+            done
+
+            for run in $(seq 1 $RUNS); do
+                run_single_experiment "$scenario" "predictive" "$run" "reallocation_enabled:true,_use_predictive:true,reallocation_period:2.0,prediction_horizon:1.0,collision_method:${collision_type}"
+            done
+
+        done
+    done
+
+    echo "Collision Method Comparison Experiments Completed"
+    echo " Total experiments run: $(( ${#COLLISION_METHODS[@]} * RUNS ))"
+}
+
+run_dynamic_goal_experiments() {
+    echo "Running Dynamic Goal Experiments"
+
+    DYNAMIC_GOAL_SCENARIOS=("scenario_7" "scenario_8" "scenario_9")
+
+    for scenario in "${DYNAMIC_GOAL_SCENARIOS[@]}"; do
+        echo ">>> Testing Scenario: $scenario"
+        
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "static" "$run" "reallocation_enabled:false"
+        done
+
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "reactive" "$run" "reallocation_enabled:true,_use_predictive:false,reallocation_period:2.0"
+        done
+
+        for run in $(seq 1 $RUNS); do
+            run_single_experiment "$scenario" "predictive" "$run" "reallocation_enabled:true,_use_predictive:true,reallocation_period:2.0,prediction_horizon:1.0"
+        done
+    done
+
+    echo "Dynamic Goal Experiments Completed"
+    echo " Total experiments run: $(( ${#DYNAMIC_GOAL_SCENARIOS[@]} * 3 * RUNS ))"
+}
