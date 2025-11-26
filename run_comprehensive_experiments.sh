@@ -20,7 +20,7 @@ SCENARIOS=(
     "scenario_9"  # Combined motion - ultimate challenge
 )
 
-// Creating results directory
+# Creating results directory
 mkdir -p "$SCRIPT_DIR/cpp/results/experiments/"
 
 
@@ -197,3 +197,41 @@ run_dynamic_goal_experiments() {
     echo "Dynamic Goal Experiments Completed"
     echo " Total experiments run: $(( ${#DYNAMIC_GOAL_SCENARIOS[@]} * 3 * RUNS ))"
 }
+
+echo "=========================================="
+echo "Starting Experiments"
+echo "=========================================="
+
+EXPERIMENT_TYPE="${1:-baseline}"
+
+case "$EXPERIMENT_TYPE" in
+    baseline)
+        run_baseline_experiments
+        ;;
+    collision)
+        run_collision_experiments
+        ;;
+    dynamic_goals)
+        run_dynamic_goal_experiments
+        ;;
+    full)
+        echo "Running: All Experiments"
+        run_baseline_experiments
+        run_collision_experiments
+        run_dynamic_goal_experiments
+        ;;
+    *)
+        echo "ERROR: Invalid experiment type: $EXPERIMENT_TYPE"
+        echo "Usage: $0 {baseline|collision|dynamic_goals|full}"
+        exit 1
+        ;;
+esac
+
+# Print summary
+echo ""
+echo "═══════════════════════════════════════════════════════════════"
+echo "  ALL EXPERIMENTS COMPLETE!"
+echo "═══════════════════════════════════════════════════════════════"
+echo ""
+echo "Results saved in: $SCRIPT_DIR/cpp/results/experiments/"
+echo ""
