@@ -5,7 +5,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_2_dense_cross",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

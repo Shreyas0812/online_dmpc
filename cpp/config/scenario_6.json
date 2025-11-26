@@ -6,7 +6,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_6_dense_collision_test",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

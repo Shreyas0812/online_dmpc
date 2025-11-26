@@ -5,7 +5,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_3_circle_formation",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

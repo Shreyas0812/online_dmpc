@@ -7,7 +7,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_7_translating_goals",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

@@ -6,7 +6,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_4_cross_bvc",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

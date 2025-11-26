@@ -9,7 +9,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_9_combined_motion",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 70,

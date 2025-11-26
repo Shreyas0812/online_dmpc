@@ -7,7 +7,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_5_cross_ondemand",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,

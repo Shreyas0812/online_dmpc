@@ -8,7 +8,7 @@
   
   "N": 4,
   "Ncmd": 4,
-  "test": "scenario_8_circular_goals",
+  "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,
