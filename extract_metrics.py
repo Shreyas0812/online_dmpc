@@ -23,7 +23,7 @@ def parse_console_log(log_path):
         log_content = f.read()
 
     # Extract number of reallocations
-    realloc_matches = re.findall(r'=== Reallocations  #(\d+)', log_content)
+    realloc_matches = re.findall(r'=== Reallocation #(\d+)', log_content)
     metrics['num_reallocations'] = len(realloc_matches)
 
     # Check if all goals were reached
@@ -86,10 +86,23 @@ def extract_all_metrics():
     results = []
 
     base_dir = './cpp/results/experiments'
+    
+    # All scenarios from run_comprehensive_experiments.sh
+    scenarios = [
+        'scenario_1', 'scenario_2', 'scenario_3',  # baseline
+        'scenario_4', 'scenario_5', 'scenario_6',  # collision
+        'scenario_7', 'scenario_8', 'scenario_9'   # dynamic goals
+    ]
+    
+    # Methods used in the experiment script
+    methods = ['static', 'reactive', 'predictive']
+    
+    # Number of runs per experiment (from RUNS=5 in bash script)
+    num_runs = 5
 
-    for scenario in ['scenario_1', 'scenario_2', 'scenario_3']:
-        for method in ['static', 'with_realloc']:
-            for run in range(1, 4):
+    for scenario in scenarios:
+        for method in methods:
+            for run in range(1, num_runs + 1):
                 run_dir = f'{base_dir}/{scenario}/{method}/run_{run}'
 
                 if not os.path.exists(run_dir):
