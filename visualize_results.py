@@ -41,23 +41,27 @@ print(f"Runs per scenario-method: {df.groupby(['scenario', 'method']).size().uni
 # ============================================================================
 def plot_solving_frequency():
     """Compare average solving frequency between methods"""
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     
     # Group by scenario and method, calculate mean and std
     grouped = df.groupby(['scenario', 'method'])['avg_solving_frequency'].agg(['mean', 'std']).reset_index()
     
     scenarios = grouped['scenario'].unique()
     x = np.arange(len(scenarios))
-    width = 0.35
+    width = 0.25
     
     static_data = grouped[grouped['method'] == 'static']
-    realloc_data = grouped[grouped['method'] == 'with_realloc']
+    reactive_data = grouped[grouped['method'] == 'reactive']
+    predictive_data = grouped[grouped['method'] == 'predictive']
     
-    bars1 = ax.bar(x - width/2, static_data['mean'], width, 
+    bars1 = ax.bar(x - width, static_data['mean'], width, 
                    yerr=static_data['std'], label='Static', 
                    capsize=5, alpha=0.8)
-    bars2 = ax.bar(x + width/2, realloc_data['mean'], width, 
-                   yerr=realloc_data['std'], label='With Reallocation',
+    bars2 = ax.bar(x, reactive_data['mean'], width, 
+                   yerr=reactive_data['std'], label='Reactive',
+                   capsize=5, alpha=0.8)
+    bars3 = ax.bar(x + width, predictive_data['mean'], width, 
+                   yerr=predictive_data['std'], label='Predictive',
                    capsize=5, alpha=0.8)
     
     ax.set_xlabel('Scenario', fontsize=12, fontweight='bold')
@@ -85,16 +89,20 @@ def plot_goal_metrics():
     grouped = df.groupby(['scenario', 'method'])['avg_distance_to_goal'].agg(['mean', 'std']).reset_index()
     scenarios = grouped['scenario'].unique()
     x = np.arange(len(scenarios))
-    width = 0.35
+    width = 0.25
     
     static_data = grouped[grouped['method'] == 'static']
-    realloc_data = grouped[grouped['method'] == 'with_realloc']
+    reactive_data = grouped[grouped['method'] == 'reactive']
+    predictive_data = grouped[grouped['method'] == 'predictive']
     
-    axes[0].bar(x - width/2, static_data['mean'], width, 
+    axes[0].bar(x - width, static_data['mean'], width, 
                 yerr=static_data['std'], label='Static', 
                 capsize=5, alpha=0.8)
-    axes[0].bar(x + width/2, realloc_data['mean'], width, 
-                yerr=realloc_data['std'], label='With Reallocation',
+    axes[0].bar(x, reactive_data['mean'], width, 
+                yerr=reactive_data['std'], label='Reactive',
+                capsize=5, alpha=0.8)
+    axes[0].bar(x + width, predictive_data['mean'], width, 
+                yerr=predictive_data['std'], label='Predictive',
                 capsize=5, alpha=0.8)
     
     axes[0].set_xlabel('Scenario', fontsize=11, fontweight='bold')
@@ -112,10 +120,12 @@ def plot_goal_metrics():
     for i, scenario in enumerate(scenarios):
         scenario_data = success_rate[success_rate['scenario'] == scenario]
         static_val = scenario_data[scenario_data['method'] == 'static']['all_goals_reached'].values[0]
-        realloc_val = scenario_data[scenario_data['method'] == 'with_realloc']['all_goals_reached'].values[0]
+        reactive_val = scenario_data[scenario_data['method'] == 'reactive']['all_goals_reached'].values[0]
+        predictive_val = scenario_data[scenario_data['method'] == 'predictive']['all_goals_reached'].values[0]
         
-        axes[1].bar(x[i] - width/2, static_val, width, alpha=0.8)
-        axes[1].bar(x[i] + width/2, realloc_val, width, alpha=0.8)
+        axes[1].bar(x[i] - width, static_val, width, alpha=0.8, color='C0')
+        axes[1].bar(x[i], reactive_val, width, alpha=0.8, color='C1')
+        axes[1].bar(x[i] + width, predictive_val, width, alpha=0.8, color='C2')
     
     axes[1].set_xlabel('Scenario', fontsize=11, fontweight='bold')
     axes[1].set_ylabel('Success Rate (%)', fontsize=11, fontweight='bold')
@@ -128,7 +138,8 @@ def plot_goal_metrics():
     # Add legend to second plot
     from matplotlib.patches import Patch
     legend_elements = [Patch(facecolor='C0', alpha=0.8, label='Static'),
-                      Patch(facecolor='C1', alpha=0.8, label='With Reallocation')]
+                      Patch(facecolor='C1', alpha=0.8, label='Reactive'),
+                      Patch(facecolor='C2', alpha=0.8, label='Predictive')]
     axes[1].legend(handles=legend_elements)
     
     plt.tight_layout()
@@ -142,11 +153,14 @@ def plot_goal_metrics():
 # ============================================================================
 def plot_cost_convergence():
     """Plot cost convergence over time for scenarios with reallocation"""
-    realloc_df = df[df['method'] == 'with_realloc'].copy()
+    # Show both reactive and predictive methods
+    realloc_df = df[df['method'].isin(['reactive', 'predictive'])].copy()
     
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4))
+    scenarios = realloc_df['scenario'].unique()
+    fig, axes = plt.subplots(3, 3, figsize=(16, 12))
+    axes = axes.flatten()
     
-    for idx, scenario in enumerate(realloc_df['scenario'].unique()):
+    for idx, scenario in enumerate(scenarios):
         scenario_data = realloc_df[realloc_df['scenario'] == scenario]
         
         ax = axes[idx]
@@ -184,7 +198,8 @@ def plot_cost_convergence():
 # ============================================================================
 def plot_reallocation_stats():
     """Plot reallocation distance statistics"""
-    realloc_df = df[df['method'] == 'with_realloc'].copy()
+    # Only analyze reactive and predictive methods (which use reallocation)
+    realloc_df = df[df['method'].isin(['reactive', 'predictive'])].copy()
     
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     
@@ -242,22 +257,26 @@ def plot_reallocation_stats():
 # ============================================================================
 def plot_final_cost():
     """Compare final assignment costs"""
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     
     grouped = df.groupby(['scenario', 'method'])['final_assignment_cost'].agg(['mean', 'std']).reset_index()
     
     scenarios = grouped['scenario'].unique()
     x = np.arange(len(scenarios))
-    width = 0.35
+    width = 0.25
     
     static_data = grouped[grouped['method'] == 'static']
-    realloc_data = grouped[grouped['method'] == 'with_realloc']
+    reactive_data = grouped[grouped['method'] == 'reactive']
+    predictive_data = grouped[grouped['method'] == 'predictive']
     
-    bars1 = ax.bar(x - width/2, static_data['mean'], width, 
+    bars1 = ax.bar(x - width, static_data['mean'], width, 
                    yerr=static_data['std'], label='Static', 
                    capsize=5, alpha=0.8)
-    bars2 = ax.bar(x + width/2, realloc_data['mean'], width, 
-                   yerr=realloc_data['std'], label='With Reallocation',
+    bars2 = ax.bar(x, reactive_data['mean'], width, 
+                   yerr=reactive_data['std'], label='Reactive',
+                   capsize=5, alpha=0.8)
+    bars3 = ax.bar(x + width, predictive_data['mean'], width, 
+                   yerr=predictive_data['std'], label='Predictive',
                    capsize=5, alpha=0.8)
     
     ax.set_xlabel('Scenario', fontsize=12, fontweight='bold')
@@ -287,15 +306,17 @@ def plot_safety_metrics():
     
     scenarios = collision_rate['scenario'].unique()
     x = np.arange(len(scenarios))
-    width = 0.35
+    width = 0.25
     
     for i, scenario in enumerate(scenarios):
         scenario_data = collision_rate[collision_rate['scenario'] == scenario]
         static_val = scenario_data[scenario_data['method'] == 'static']['collisions'].values[0]
-        realloc_val = scenario_data[scenario_data['method'] == 'with_realloc']['collisions'].values[0]
+        reactive_val = scenario_data[scenario_data['method'] == 'reactive']['collisions'].values[0]
+        predictive_val = scenario_data[scenario_data['method'] == 'predictive']['collisions'].values[0]
         
-        ax.bar(x[i] - width/2, static_val, width, alpha=0.8, color='C0')
-        ax.bar(x[i] + width/2, realloc_val, width, alpha=0.8, color='C1')
+        ax.bar(x[i] - width, static_val, width, alpha=0.8, color='C0')
+        ax.bar(x[i], reactive_val, width, alpha=0.8, color='C1')
+        ax.bar(x[i] + width, predictive_val, width, alpha=0.8, color='C2')
     
     ax.set_xlabel('Scenario', fontsize=12, fontweight='bold')
     ax.set_ylabel('Collision Rate (%)', fontsize=12, fontweight='bold')
@@ -306,7 +327,8 @@ def plot_safety_metrics():
     
     from matplotlib.patches import Patch
     legend_elements = [Patch(facecolor='C0', alpha=0.8, label='Static'),
-                      Patch(facecolor='C1', alpha=0.8, label='With Reallocation')]
+                      Patch(facecolor='C1', alpha=0.8, label='Reactive'),
+                      Patch(facecolor='C2', alpha=0.8, label='Predictive')]
     ax.legend(handles=legend_elements)
     
     plt.tight_layout()
