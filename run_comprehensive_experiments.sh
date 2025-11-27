@@ -7,7 +7,7 @@ echo "Script directory: $SCRIPT_DIR"
 
 cd $SCRIPT_DIR
 
-RUNS=5
+RUNS=3
 SCENARIOS=(
     "scenario_1"  # Cross pattern - clear benefit case
     "scenario_2"  # Dense cross - moderate conflict
