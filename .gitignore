@@ -26,3 +26,4 @@ matlab/data/
 .vscode/settings.json
 
 cpp/results/experiments/
+cpp/results/scalability/
