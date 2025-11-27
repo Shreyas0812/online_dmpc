@@ -59,8 +59,8 @@
   "quad_coll": 1,
   "acc_cost": 0.015,
 
-  "pmin": [-0.5, -0.5, 0.2],
-  "pmax": [4.5, 4.5, 2.0],
+  "pmin": [-10.5, -10.5, 0.2],
+  "pmax": [10.5, 10.5, 2.0],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
 
@@ -88,7 +88,7 @@
   "goal_region_is_region": false,
 
   "goal_circular_radius": 1.5,
-  "goal_circular_omega": 0.2,
+  "goal_circular_omega": 0.3,
   "goal_translation_velocity": 0.15,
 
   "reallocation_enabled": true,
