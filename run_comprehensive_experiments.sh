@@ -202,7 +202,7 @@ echo "=========================================="
 echo "Starting Experiments"
 echo "=========================================="
 
-EXPERIMENT_TYPE="${1:-baseline}"
+EXPERIMENT_TYPE="${1:-full}"
 
 case "$EXPERIMENT_TYPE" in
     baseline)
