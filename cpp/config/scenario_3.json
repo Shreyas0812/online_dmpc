@@ -1,7 +1,7 @@
 {
   "_comment": "SCENARIO 3: Circle Formation - High Conflict",
   "_description": "Four agents arranged in a circle rotate 90 degrees clockwise. Creates maximum path crossing where every agent's path intersects all others in the center. Ultimate stress test.",
-  "_expected_outcome": "This is the hardest scenario. If reallocation helps here, method is truly robust. If it hurts performance, we've identified an important limitation.",
+  "_expected_outcome": "This is the hardest scenario. If reallocation helps here, method is truly robust. If it hurts performance, it will be an important limitation.",
   
   "N": 4,
   "Ncmd": 4,
@@ -17,17 +17,17 @@
   ],
 
   "po": [
-    [2.0, 1.0, 1.0],
-    [3.0, 2.0, 1.0],
-    [2.0, 3.0, 1.0],
-    [1.0, 2.0, 1.0]
+    [2.0, 0.8, 1.0],
+    [3.2, 2.0, 1.0],
+    [2.0, 3.2, 1.0],
+    [0.8, 2.0, 1.0]
   ],
 
   "pf": [
-    [3.0, 2.0, 1.0],
-    [2.0, 3.0, 1.0],
-    [1.0, 2.0, 1.0],
-    [2.0, 1.0, 1.0]
+    [2.7, 2.7, 1.0],
+    [1.3, 2.7, 1.0],
+    [1.3, 1.3, 1.0],
+    [2.7, 1.3, 1.0]
   ],
 
   "d": 5,
@@ -56,7 +56,7 @@
   "acc_cost": 0.015,
 
   "pmin": [0.0, 0.0, 0.2],
-  "pmax": [4.0, 4.0, 2.0],
+  "pmax": [4.5, 4.5, 2.0],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
 
@@ -84,7 +84,7 @@
   "goal_region_is_region": false,
 
   "goal_circular_radius": 2.0,
-  "goal_circular_omega": 0.5,
+  "goal_circular_omega": 0.2,
   "goal_translation_velocity": 0.2,
 
   "reallocation_enabled": true,
