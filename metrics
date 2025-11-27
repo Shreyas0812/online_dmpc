@@ -1,0 +1,18 @@
+General Metrics:
+Error over time --> Average Goal to Robot error 
+Number of Colliions --> 2 Robots within a delta (0.2)
+
+Additional:
+Reallocation Metrics 
+Reactive 
+Predictive
+Formation Control (Moving Goals)
+
+Collision Avoidance:
+on-demand       (Distributed) -- No guarantee
+BVC             (Distributed) -- guarantee more or less -- Implemented by team
+penalty based   (centralized) -- No guarantee
+
+Multiple Scenarios and their importance
+Scenario 1 to Scenario 9 
+
