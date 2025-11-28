@@ -1,0 +1,172 @@
+{
+  "_comment": "Scalability scenario with 8 agents",
+  "_description": "Scalability test with 8 agents in grid formation.",
+  "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
+  "N": 8,
+  "Ncmd": 8,
+  "test": "default",
+  "solver": "qpoases",
+  "simulation_duration": 30,
+  "output_trajectories_paths": [
+    "../results/trajectories_scale_8.txt"
+  ],
+  "output_goals_paths": [
+    "../results/goals_scale_8.txt"
+  ],
+  "po": [
+    [
+      0.5,
+      0.5,
+      1.6879905186879554
+    ],
+    [
+      1.5,
+      0.5,
+      3.452254190240705
+    ],
+    [
+      2.5,
+      0.5,
+      2.2402202357679526
+    ],
+    [
+      0.5,
+      1.5,
+      3.377743562991591
+    ],
+    [
+      1.5,
+      1.5,
+      3.0243373011456525
+    ],
+    [
+      2.5,
+      1.5,
+      1.6793562697802362
+    ],
+    [
+      0.5,
+      2.5,
+      2.2001976457047236
+    ],
+    [
+      1.5,
+      2.5,
+      2.6228463895489016
+    ]
+  ],
+  "pf": [
+    [
+      2.5,
+      2.5,
+      3.087688573236007
+    ],
+    [
+      1.5,
+      2.5,
+      2.607304114350101
+    ],
+    [
+      0.5,
+      2.5,
+      2.6760889205818126
+    ],
+    [
+      2.5,
+      1.5,
+      2.9767925851706876
+    ],
+    [
+      1.5,
+      1.5,
+      2.679985640966123
+    ],
+    [
+      0.5,
+      1.5,
+      3.301960629473321
+    ],
+    [
+      2.5,
+      0.5,
+      3.210855790899968
+    ],
+    [
+      1.5,
+      0.5,
+      3.5733900486394488
+    ]
+  ],
+  "d": 5,
+  "num_segments": 3,
+  "deg_poly": 3,
+  "dim": 3,
+  "t_segment": 0.5,
+  "zeta_xy": 0.6502,
+  "tau_xy": 0.3815,
+  "zeta_z": 0.9103,
+  "tau_z": 0.3,
+  "k_hor": 16,
+  "h": 0.1,
+  "ts": 0.01,
+  "s_free": 100,
+  "s_obs": 100,
+  "s_repel": 1000,
+  "spd_f": 3,
+  "spd_o": 1,
+  "spd_r": 10,
+  "lin_coll": -100000,
+  "quad_coll": 1,
+  "acc_cost": 0.015,
+  "pmin": [
+    -0.5,
+    -0.5,
+    0.2
+  ],
+  "pmax": [
+    4.5,
+    4.5,
+    4.0
+  ],
+  "amin": [
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "amax": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "rmin": 0.3,
+  "order": 2,
+  "height_scaling": 1.2,
+  "rmin_obs": 0.5,
+  "order_obs": 2,
+  "height_scaling_obs": 2.0,
+  "std_position": 0.00228682,
+  "std_velocity": 0.0109302,
+  "collision_check_rmin": 0.15,
+  "collision_check_order": 2,
+  "collision_check_height_scaling": 3.0,
+  "goal_tolerance": 0.15,
+  "max_clusters": 1,
+  "max_cost_threshold": 0.08,
+  "min_cost_threshold": -0.01,
+  "goal_region_radius": 0.5,
+  "goal_region_is_region": false,
+  "goal_circular_radius": 2.0,
+  "goal_circular_omega": 0.2,
+  "goal_translation_velocity": 0.2,
+  "reallocation_enabled": true,
+  "reallocation_period": 2.0,
+  "_use_predictive": true,
+  "_prediction_horizon": 1.0,
+  "collision_method": "on-demand",
+  "motion_type": "random_jump",
+  "motion_type1": "circular",
+  "motion_type2": "translating",
+  "motion_type3": "circular_translating",
+  "motion_type4": "static",
+  "motion_type5": "random_jump"
+}

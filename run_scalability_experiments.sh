@@ -7,17 +7,23 @@ echo "Script directory: $SCRIPT_DIR"
 
 cd $SCRIPT_DIR
 
-RUNS=3
+RUNS=1
+# SCALABILITY_SCENARIOS=(
+#     "scenario_scale_4" 
+#     "scenario_scale_8"   
+#     "scenario_scale_16"  
+#     "scenario_scale_32"
+#     "scenario_scale_64"
+#     "scenario_scale_128" 
+# )
+
 SCALABILITY_SCENARIOS=(
-    "scenario_scale_4"   # 4 agents - baseline
-    "scenario_scale_6"   # 6 agents - medium scale
-    "scenario_scale_8"   # 8 agents - large scale
-    "scenario_scale_10"  # 10 agents - stress test
+    "scenario_scale_4" 
+    "scenario_scale_8" 
 )
 
 # Creating results directory
 mkdir -p "$SCRIPT_DIR/cpp/results/scalability/"
-
 
 # Function to modify JSON config parameters
 modify_json_config() {
@@ -48,7 +54,6 @@ with open('$config_file', 'w') as f:
 END_PYTHON
 }
 
-# Function to generate scalability config files
 generate_scalability_configs() {
     echo "Generating scalability configuration files..."
     
@@ -56,58 +61,61 @@ generate_scalability_configs() {
 import json
 import numpy as np
 
-base_config_path = '${SCRIPT_DIR}/cpp/config/scenario_1.json'
-config_dir = '${SCRIPT_DIR}/cpp/config/'
+base_config_path = '${SCRIPT_DIR}/cpp/config/scenario_scale.json'
+config_dir = '${SCRIPT_DIR}/cpp/config/scenario_scale_'
 
 # Load base config
 with open(base_config_path, 'r') as f:
     base_config = json.load(f)
 
-# Agent counts to test
-agent_counts = [4, 6, 8, 10]
+# Agents counts for scalability scenarios
+agent_counts = [4, 8, 16, 32, 64, 128]
 
 for n_agents in agent_counts:
     # Generate grid positions for agents
     grid_size = int(np.ceil(np.sqrt(n_agents)))
-    spacing = 3.5 / (grid_size - 1) if grid_size > 1 else 0
-    
+    spacing = 2.0 / (grid_size - 1) if grid_size > 1 else 0
+
     po = []
     pf = []
-    
+
     for i in range(n_agents):
         row = i // grid_size
         col = i % grid_size
-        # Start positions (grid)
-        po.append([0.5 + col * spacing, 0.5 + row * spacing, 1.0])
-        # Goal positions (opposite corners pattern)
+        x = 0.5 + col * spacing
+        y = 0.5 + row * spacing
+        z = 2.5 + np.random.uniform(-1.2, 1.2)
+        po.append([x, y, z])
+
         goal_row = (grid_size - 1 - row)
         goal_col = (grid_size - 1 - col)
-        pf.append([0.5 + goal_col * spacing, 0.5 + goal_row * spacing, 1.0])
+        goal_x = 0.5 + goal_col * spacing
+        goal_y = 0.5 + goal_row * spacing
+        goal_z = 2.5 + np.random.uniform(-1.2, 1.2)
+        pf.append([goal_x, goal_y, goal_z])
     
     # Create new config
     config = base_config.copy()
-    config['_comment'] = f"SCALABILITY TEST: {n_agents} agents"
-    config['_description'] = f"Cross-swap pattern with {n_agents} agents to test scalability"
+    config['_comment'] = f'Scalability scenario with {n_agents} agents'
+    config['_description'] = f'Scalability test with {n_agents} agents in grid formation.'
     config['N'] = n_agents
     config['Ncmd'] = n_agents
     config['po'] = po
     config['pf'] = pf
-    config['simulation_duration'] = 60
+    config['simulation_duration'] = 30
     config['output_trajectories_paths'] = [f'../results/trajectories_scale_{n_agents}.txt']
     config['output_goals_paths'] = [f'../results/goals_scale_{n_agents}.txt']
-    
+
     # Save config
-    output_path = f'{config_dir}/scenario_scale_{n_agents}.json'
+    output_path = f'{config_dir}{n_agents}.json'
     with open(output_path, 'w') as f:
         json.dump(config, f, indent=2)
     
-    print(f"✓ Generated: scenario_scale_{n_agents}.json")
-
-print("All scalability configs generated!")
+    print(f'✓ Generated: scenario_scale_{n_agents}.json')
 END_PYTHON
 }
 
-# Function to run 1 experiment
+# run single experiment
 run_single_experiment() {
     local scenario="$1"
     local method="$2"
@@ -115,9 +123,9 @@ run_single_experiment() {
     local config_modifications="$4"
 
     echo ""
-    echo "=========================================="
+    echo "========================================================"
     echo "Running Experiment: Scenario=$scenario, Method=$method, Run=$run"
-    echo "=========================================="
+    echo "========================================================"
 
     # Create output directory
     OUTPUT_DIR="$SCRIPT_DIR/cpp/results/scalability/${scenario}/${method}/run_${run}/"
@@ -179,39 +187,26 @@ run_scalability_experiments() {
     echo "═══════════════════════════════════════════════════════════════"
     echo ""
     echo "Testing reallocation algorithms with varying team sizes"
-    echo "Agent counts: 4, 6, 8, 10"
+    echo "Agent counts: 4, 8, 16, 32, 64, 128"
     echo "Methods: Static, Reactive, Predictive"
     echo "Runs per configuration: $RUNS"
     echo ""
 
     for scenario in "${SCALABILITY_SCENARIOS[@]}"; do
-        # Extract agent count from scenario name
-        agent_count=$(echo "$scenario" | grep -o '[0-9]*$')
-        
-        echo ""
-        echo "┌─────────────────────────────────────────────────────────────┐"
-        echo "│  Testing with $agent_count agents                                   │"
-        echo "└─────────────────────────────────────────────────────────────┘"
-        
-        # Static baseline (no reallocation)
-        echo ""
-        echo ">>> Running STATIC baseline..."
-        for run in $(seq 1 $RUNS); do
-            run_single_experiment "$scenario" "static" "$run" "reallocation_enabled:false"
-        done
+        for method in "static" "reactive" "predictive"; do
+            for run in $(seq 1 $RUNS); do
+                config_modifications=""
 
-        # Reactive reallocation
-        echo ""
-        echo ">>> Running REACTIVE reallocation..."
-        for run in $(seq 1 $RUNS); do
-            run_single_experiment "$scenario" "reactive" "$run" "reallocation_enabled:true,_use_predictive:false,reallocation_period:2.0"
-        done
+                if [ "$method" == "static" ]; then
+                    config_modifications="reallocation_enabled:false"
+                elif [ "$method" == "reactive" ]; then
+                    config_modifications="reallocation_enabled:true,_use_predictive:false"
+                elif [ "$method" == "predictive" ]; then
+                    config_modifications="reallocation_enabled:true,_use_predictive:true"
+                fi
 
-        # Predictive reallocation
-        echo ""
-        echo ">>> Running PREDICTIVE reallocation..."
-        for run in $(seq 1 $RUNS); do
-            run_single_experiment "$scenario" "predictive" "$run" "reallocation_enabled:true,_use_predictive:true,reallocation_period:2.0,prediction_horizon:1.0"
+                run_single_experiment "$scenario" "$method" "$run" "$config_modifications"
+            done
         done
     done
 
@@ -225,11 +220,10 @@ echo "=========================================="
 echo "Starting Scalability Experiments"
 echo "=========================================="
 
-# Check if we need to generate configs
-if [ "$1" == "--generate-configs" ] || [ ! -f "$SCRIPT_DIR/cpp/config/scenario_scale_4.json" ]; then
-    generate_scalability_configs
-    echo ""
-fi
+# Generate configs
+
+generate_scalability_configs
+echo ""
 
 # Run the experiments
 run_scalability_experiments
