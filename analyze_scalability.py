@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Scalability Analysis Script for DMPC Experiments
-Analyzes performance metrics across different team sizes (4, 6, 8, 10 agents)
+Analyzes performance metrics across different team sizes (4, 8, 16, 32, 64, 128 agents)
 """
 
 import os
@@ -44,6 +44,12 @@ def parse_console_log(log_path):
     # Check if all goals were reached
     metrics['all_goals_reached'] = 'All the vehicles reached their goals!' in log_content
 
+    # Parse individual vehicle goal distances
+    vehicle_goal_distances = re.findall(r'Vehicle \d+ did not reached its goal by ([\d.]+) m', log_content)
+    if vehicle_goal_distances:
+        distances = [float(d) for d in vehicle_goal_distances]
+        metrics['avg_distance_to_goal'] = sum(distances) / len(distances)
+    
     # Check for collisions
     metrics['collisions'] = 'No collisions found!' not in log_content
 
@@ -53,7 +59,6 @@ def parse_console_log(log_path):
         metrics['final_assignment_cost'] = float(cost_matches[-1])
         costs = [float(cost) for cost in cost_matches]
         metrics['cost_over_time'] = costs
-        metrics['avg_distance_to_goal'] = sum(costs) / len(costs)
     
     # Extract solving frequencies
     freq_matches = re.findall(r'Solving frequency = ([\d.]+) Hz', log_content)
@@ -66,7 +71,7 @@ def parse_console_log(log_path):
     return metrics
 
 
-def parse_reallocation_log(log_path):
+def parse_reallocation_log(log_path, method='reactive'):
     """Parse the reallocation log to extract metrics."""
     metrics = {
         'total_reallocation_distance': 0,
@@ -76,6 +81,10 @@ def parse_reallocation_log(log_path):
         'reallocations_per_agent': 0
     }
 
+    # Static method should not have reallocations
+    if method == 'static':
+        return metrics
+    
     if not os.path.exists(log_path):
         return metrics
     
@@ -109,13 +118,18 @@ def extract_scalability_metrics():
     base_dir = './cpp/results/scalability'
     
     # Scalability scenarios
-    scenarios = ['scenario_scale_4', 'scenario_scale_6', 'scenario_scale_8', 'scenario_scale_10']
+    # scenarios = ['scenario_scale_4', 'scenario_scale_8', 'scenario_scale_16', 
+    #              'scenario_scale_32', 'scenario_scale_64', 'scenario_scale_128']
+
+    scenarios = ['scenario_scale_4', 'scenario_scale_8', 'scenario_scale_16', 
+                 'scenario_scale_32']
     
     # Extract agent count from scenario name
     agent_counts = {scenario: int(scenario.split('_')[-1]) for scenario in scenarios}
     
-    # Methods used in the experiment script
+    # Methods and collision avoidance methods used in the experiment script
     methods = ['static', 'reactive', 'predictive']
+    collision_methods = ['BVC', 'on-demand']
     
     # Number of runs per experiment (from RUNS=3 in bash script)
     num_runs = 3
@@ -126,31 +140,33 @@ def extract_scalability_metrics():
 
     for scenario in scenarios:
         for method in methods:
-            for run in range(1, num_runs + 1):
-                run_dir = f'{base_dir}/{scenario}/{method}/run_{run}'
+            for collision_method in collision_methods:
+                for run in range(1, num_runs + 1):
+                    run_dir = f'{base_dir}/{scenario}/{method}/{collision_method}/run_{run}'
 
-                if not os.path.exists(run_dir):
-                    print(f"⚠ {run_dir} not found")
-                    continue
+                    if not os.path.exists(run_dir):
+                        print(f"⚠ {run_dir} not found")
+                        continue
 
-                console_log = f'{run_dir}/console.log'
-                console_metrics = parse_console_log(console_log) 
-                
-                reallocation_log = f'{run_dir}/reallocation_log.csv'
-                realloc_metrics = parse_reallocation_log(reallocation_log)
+                    console_log = f'{run_dir}/console.log'
+                    console_metrics = parse_console_log(console_log) 
+                    
+                    reallocation_log = f'{run_dir}/reallocation_log.csv'
+                    realloc_metrics = parse_reallocation_log(reallocation_log, method=method)
 
-                result = {
-                    'scenario': scenario,
-                    'num_agents': agent_counts[scenario],
-                    'method': method,
-                    'run': run,
-                    **console_metrics,
-                    **realloc_metrics
-                }
+                    result = {
+                        'scenario': scenario,
+                        'num_agents': agent_counts[scenario],
+                        'method': method,
+                        'collision_method': collision_method,
+                        'run': run,
+                        **console_metrics,
+                        **realloc_metrics
+                    }
 
-                results.append(result)
+                    results.append(result)
 
-                print(f"✓ Extracted: {scenario} ({agent_counts[scenario]} agents) - {method} - run {run}")
+                    print(f"✓ Extracted: {scenario} ({agent_counts[scenario]} agents) - {method}/{collision_method} - run {run}")
 
     if not results:
         print("\n❌ No results found! Have you run the scalability experiments?")
@@ -175,8 +191,8 @@ def plot_scalability_analysis(df):
     print("GENERATING SCALABILITY PLOTS")
     print("="*60)
 
-    # Group by number of agents and method
-    grouped = df.groupby(['num_agents', 'method']).agg({
+    # Group by number of agents, method, and collision_method
+    grouped = df.groupby(['num_agents', 'method', 'collision_method']).agg({
         'avg_solving_frequency': ['mean', 'std'],
         'num_reallocations': ['mean', 'std'],
         'all_goals_reached': 'mean',
@@ -190,11 +206,20 @@ def plot_scalability_analysis(df):
     # Flatten column names
     grouped.columns = ['_'.join(col).strip('_') if col[1] else col[0] for col in grouped.columns.values]
 
+    # For plotting, we'll focus on BVC collision method (or aggregate across collision methods)
+    # Filter to BVC if available, otherwise use all data
+    if 'collision_method' in grouped.columns:
+        plot_data = grouped[grouped['collision_method'] == 'BVC'] if 'BVC' in grouped['collision_method'].values else grouped
+    else:
+        plot_data = grouped
+
     # 1. Solving Frequency vs Team Size
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         ax.errorbar(method_data['num_agents'], 
                    method_data['avg_solving_frequency_mean'],
                    yerr=method_data['avg_solving_frequency_std'],
@@ -207,7 +232,9 @@ def plot_scalability_analysis(df):
                 fontsize=14, fontweight='bold')
     ax.legend(fontsize=11)
     ax.grid(True, alpha=0.3)
-    ax.set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        ax.set_xticks(sorted(plot_data['num_agents'].unique()))
+    ax.set_xscale('log', base=2)
     
     plt.tight_layout()
     plt.savefig(output_dir / "scalability_01_solving_frequency.png", dpi=300, bbox_inches='tight')
@@ -218,7 +245,9 @@ def plot_scalability_analysis(df):
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for method in ['reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         ax.errorbar(method_data['num_agents'], 
                    method_data['num_reallocations_mean'],
                    yerr=method_data['num_reallocations_std'],
@@ -231,7 +260,9 @@ def plot_scalability_analysis(df):
                 fontsize=14, fontweight='bold')
     ax.legend(fontsize=11)
     ax.grid(True, alpha=0.3)
-    ax.set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        ax.set_xticks(sorted(plot_data['num_agents'].unique()))
+    ax.set_xscale('log', base=2)
     
     plt.tight_layout()
     plt.savefig(output_dir / "scalability_02_num_reallocations.png", dpi=300, bbox_inches='tight')
@@ -242,7 +273,9 @@ def plot_scalability_analysis(df):
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         ax.plot(method_data['num_agents'], 
                method_data['all_goals_reached_mean'] * 100,
                marker='o', linewidth=2, markersize=8,
@@ -254,7 +287,9 @@ def plot_scalability_analysis(df):
                 fontsize=14, fontweight='bold')
     ax.legend(fontsize=11)
     ax.grid(True, alpha=0.3)
-    ax.set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        ax.set_xticks(sorted(plot_data['num_agents'].unique()))
+    ax.set_xscale('log', base=2)
     ax.set_ylim([0, 105])
     
     plt.tight_layout()
@@ -266,7 +301,9 @@ def plot_scalability_analysis(df):
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         ax.errorbar(method_data['num_agents'], 
                    method_data['avg_distance_to_goal_mean'],
                    yerr=method_data['avg_distance_to_goal_std'],
@@ -279,7 +316,9 @@ def plot_scalability_analysis(df):
                 fontsize=14, fontweight='bold')
     ax.legend(fontsize=11)
     ax.grid(True, alpha=0.3)
-    ax.set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        ax.set_xticks(sorted(plot_data['num_agents'].unique()))
+    ax.set_xscale('log', base=2)
     
     plt.tight_layout()
     plt.savefig(output_dir / "scalability_04_distance_to_goal.png", dpi=300, bbox_inches='tight')
@@ -290,7 +329,9 @@ def plot_scalability_analysis(df):
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for method in ['reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         ax.errorbar(method_data['num_agents'], 
                    method_data['total_reallocation_distance_mean'],
                    yerr=method_data['total_reallocation_distance_std'],
@@ -303,7 +344,9 @@ def plot_scalability_analysis(df):
                 fontsize=14, fontweight='bold')
     ax.legend(fontsize=11)
     ax.grid(True, alpha=0.3)
-    ax.set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        ax.set_xticks(sorted(plot_data['num_agents'].unique()))
+    ax.set_xscale('log', base=2)
     
     plt.tight_layout()
     plt.savefig(output_dir / "scalability_05_reallocation_distance.png", dpi=300, bbox_inches='tight')
@@ -315,7 +358,9 @@ def plot_scalability_analysis(df):
     
     # Subplot 1: Solving Frequency
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         axes[0, 0].plot(method_data['num_agents'], 
                        method_data['avg_solving_frequency_mean'],
                        marker='o', linewidth=2, markersize=6, label=method.capitalize())
@@ -324,11 +369,15 @@ def plot_scalability_analysis(df):
     axes[0, 0].set_title('(a) Computational Performance', fontweight='bold')
     axes[0, 0].legend()
     axes[0, 0].grid(True, alpha=0.3)
-    axes[0, 0].set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        axes[0, 0].set_xticks(sorted(plot_data['num_agents'].unique()))
+    axes[0, 0].set_xscale('log', base=2)
     
     # Subplot 2: Success Rate
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         axes[0, 1].plot(method_data['num_agents'], 
                        method_data['all_goals_reached_mean'] * 100,
                        marker='s', linewidth=2, markersize=6, label=method.capitalize())
@@ -337,12 +386,16 @@ def plot_scalability_analysis(df):
     axes[0, 1].set_title('(b) Mission Success', fontweight='bold')
     axes[0, 1].legend()
     axes[0, 1].grid(True, alpha=0.3)
-    axes[0, 1].set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        axes[0, 1].set_xticks(sorted(plot_data['num_agents'].unique()))
+    axes[0, 1].set_xscale('log', base=2)
     axes[0, 1].set_ylim([0, 105])
     
     # Subplot 3: Number of Reallocations
     for method in ['reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         axes[1, 0].plot(method_data['num_agents'], 
                        method_data['num_reallocations_mean'],
                        marker='d', linewidth=2, markersize=6, label=method.capitalize())
@@ -351,11 +404,15 @@ def plot_scalability_analysis(df):
     axes[1, 0].set_title('(c) Reallocation Frequency', fontweight='bold')
     axes[1, 0].legend()
     axes[1, 0].grid(True, alpha=0.3)
-    axes[1, 0].set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        axes[1, 0].set_xticks(sorted(plot_data['num_agents'].unique()))
+    axes[1, 0].set_xscale('log', base=2)
     
     # Subplot 4: Average Distance to Goal
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method]
+        method_data = plot_data[plot_data['method'] == method]
+        if method_data.empty:
+            continue
         axes[1, 1].plot(method_data['num_agents'], 
                        method_data['avg_distance_to_goal_mean'],
                        marker='^', linewidth=2, markersize=6, label=method.capitalize())
@@ -364,7 +421,9 @@ def plot_scalability_analysis(df):
     axes[1, 1].set_title('(d) Goal Tracking Performance', fontweight='bold')
     axes[1, 1].legend()
     axes[1, 1].grid(True, alpha=0.3)
-    axes[1, 1].set_xticks(grouped['num_agents'].unique())
+    if not plot_data.empty:
+        axes[1, 1].set_xticks(sorted(plot_data['num_agents'].unique()))
+    axes[1, 1].set_xscale('log', base=2)
     
     plt.suptitle('Scalability Analysis: Comprehensive Comparison', 
                 fontsize=16, fontweight='bold', y=0.995)
@@ -391,42 +450,49 @@ def print_summary_statistics(df):
         agent_df = df[df['num_agents'] == num_agents]
         
         for method in ['static', 'reactive', 'predictive']:
-            method_df = agent_df[agent_df['method'] == method]
+            for collision_method in df['collision_method'].unique():
+                method_df = agent_df[(agent_df['method'] == method) & 
+                                    (agent_df['collision_method'] == collision_method)]
             
-            if method_df.empty:
-                continue
-            
-            print(f"\n  {method.upper()}:")
-            print(f"    Solving Frequency: {method_df['avg_solving_frequency'].mean():.2f} ± {method_df['avg_solving_frequency'].std():.2f} Hz")
-            print(f"    Success Rate: {method_df['all_goals_reached'].mean()*100:.1f}%")
-            print(f"    Collision Rate: {method_df['collisions'].mean()*100:.1f}%")
-            print(f"    Avg Distance to Goal: {method_df['avg_distance_to_goal'].mean():.3f} ± {method_df['avg_distance_to_goal'].std():.3f} m")
-            
-            if method != 'static':
-                print(f"    Num Reallocations: {method_df['num_reallocations'].mean():.1f} ± {method_df['num_reallocations'].std():.1f}")
-                print(f"    Total Realloc Distance: {method_df['total_reallocation_distance'].mean():.2f} ± {method_df['total_reallocation_distance'].std():.2f} m")
+                if method_df.empty:
+                    continue
+                
+                print(f"\n  {method.upper()} ({collision_method}):")
+                print(f"    Solving Frequency: {method_df['avg_solving_frequency'].mean():.2f} ± {method_df['avg_solving_frequency'].std():.2f} Hz")
+                print(f"    Success Rate: {method_df['all_goals_reached'].mean()*100:.1f}%")
+                print(f"    Collision Rate: {method_df['collisions'].mean()*100:.1f}%")
+                print(f"    Avg Distance to Goal: {method_df['avg_distance_to_goal'].mean():.3f} ± {method_df['avg_distance_to_goal'].std():.3f} m")
+                
+                if method != 'static':
+                    print(f"    Num Reallocations: {method_df['num_reallocations'].mean():.1f} ± {method_df['num_reallocations'].std():.1f}")
+                    print(f"    Total Realloc Distance: {method_df['total_reallocation_distance'].mean():.2f} ± {method_df['total_reallocation_distance'].std():.2f} m")
     
     # Performance degradation analysis
     print(f"\n{'='*60}")
     print("PERFORMANCE DEGRADATION ANALYSIS")
     print(f"{'='*60}")
     
-    grouped = df.groupby(['num_agents', 'method'])['avg_solving_frequency'].mean().reset_index()
+    grouped = df.groupby(['num_agents', 'method', 'collision_method'])['avg_solving_frequency'].mean().reset_index()
     
     for method in ['static', 'reactive', 'predictive']:
-        method_data = grouped[grouped['method'] == method].sort_values('num_agents')
-        
-        if len(method_data) < 2:
-            continue
-        
-        freq_4 = method_data[method_data['num_agents'] == 4]['avg_solving_frequency'].values
-        freq_10 = method_data[method_data['num_agents'] == 10]['avg_solving_frequency'].values
-        
-        if len(freq_4) > 0 and len(freq_10) > 0:
-            degradation = ((freq_4[0] - freq_10[0]) / freq_4[0]) * 100
-            print(f"\n  {method.capitalize()}: {degradation:.1f}% frequency reduction (4→10 agents)")
-            print(f"    4 agents:  {freq_4[0]:.2f} Hz")
-            print(f"    10 agents: {freq_10[0]:.2f} Hz")
+        for collision_method in df['collision_method'].unique():
+            method_data = grouped[(grouped['method'] == method) & 
+                                 (grouped['collision_method'] == collision_method)].sort_values('num_agents')
+            
+            if len(method_data) < 2:
+                continue
+            
+            min_agents = method_data['num_agents'].min()
+            max_agents = method_data['num_agents'].max()
+            
+            freq_min = method_data[method_data['num_agents'] == min_agents]['avg_solving_frequency'].values
+            freq_max = method_data[method_data['num_agents'] == max_agents]['avg_solving_frequency'].values
+            
+            if len(freq_min) > 0 and len(freq_max) > 0:
+                degradation = ((freq_min[0] - freq_max[0]) / freq_min[0]) * 100
+                print(f"\n  {method.capitalize()} ({collision_method}): {degradation:.1f}% frequency reduction ({min_agents}→{max_agents} agents)")
+                print(f"    {min_agents} agents:  {freq_min[0]:.2f} Hz")
+                print(f"    {max_agents} agents: {freq_max[0]:.2f} Hz")
 
 
 def main():
