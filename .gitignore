@@ -27,3 +27,4 @@ matlab/data/
 
 cpp/results/experiments/
 cpp/results/scalability/
+cpp/results/scalability_random_jump/
