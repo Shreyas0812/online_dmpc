@@ -122,7 +122,7 @@ def extract_scalability_metrics():
     #              'scenario_scale_32', 'scenario_scale_64', 'scenario_scale_128']
 
     scenarios = ['scenario_scale_4', 'scenario_scale_8', 'scenario_scale_16', 
-                 'scenario_scale_32']
+                 'scenario_scale_32', 'scenario_scale_64']
     
     # Extract agent count from scenario name
     agent_counts = {scenario: int(scenario.split('_')[-1]) for scenario in scenarios}
