@@ -78,7 +78,7 @@
   "_prediction_horizon": 1.0,
 
   "collision_method": "on-demand",
-  "motion_type": "random_jump",
+  "motion_type": "static",
 
   "motion_type1": "circular",
   "motion_type2": "translating",
