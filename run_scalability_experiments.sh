@@ -7,7 +7,7 @@ echo "Script directory: $SCRIPT_DIR"
 
 cd $SCRIPT_DIR
 
-RUNS=1
+RUNS=2
 # SCALABILITY_SCENARIOS=(
 #     "scenario_scale_4" 
 #     "scenario_scale_8"   
@@ -189,30 +189,33 @@ run_scalability_experiments() {
     echo "Testing reallocation algorithms with varying team sizes"
     echo "Agent counts: 4, 8, 16, 32, 64, 128"
     echo "Methods: Static, Reactive, Predictive"
+    echo "Collision methods: on-demand, BVC"
     echo "Runs per configuration: $RUNS"
     echo ""
 
     for scenario in "${SCALABILITY_SCENARIOS[@]}"; do
         for method in "static" "reactive" "predictive"; do
-            for run in $(seq 1 $RUNS); do
-                config_modifications=""
+            for collision_method in "on-demand" "BVC"; do
+                for run in $(seq 1 $RUNS); do
+                    config_modifications=""
 
-                if [ "$method" == "static" ]; then
-                    config_modifications="reallocation_enabled:false"
-                elif [ "$method" == "reactive" ]; then
-                    config_modifications="reallocation_enabled:true,_use_predictive:false"
-                elif [ "$method" == "predictive" ]; then
-                    config_modifications="reallocation_enabled:true,_use_predictive:true"
-                fi
+                    if [ "$method" == "static" ]; then
+                        config_modifications="reallocation_enabled:false,collision_method:${collision_method}"
+                    elif [ "$method" == "reactive" ]; then
+                        config_modifications="reallocation_enabled:true,_use_predictive:false,collision_method:${collision_method}"
+                    elif [ "$method" == "predictive" ]; then
+                        config_modifications="reallocation_enabled:true,_use_predictive:true,collision_method:${collision_method}"
+                    fi
 
-                run_single_experiment "$scenario" "$method" "$run" "$config_modifications"
+                    run_single_experiment "$scenario" "${method}/${collision_method}" "$run" "$config_modifications"
+                done
             done
         done
     done
 
     echo ""
     echo "Scalability Experiments Completed"
-    echo "Total experiments run: $(( ${#SCALABILITY_SCENARIOS[@]} * 3 * RUNS ))"
+    echo "Total experiments run: $(( ${#SCALABILITY_SCENARIOS[@]} * 3 * 2 * RUNS ))"
 }
 
 # Main execution
