@@ -3,34 +3,17 @@
   "_description": "Four agents swap diagonally in 4x4m workspace. This is the proof-of-concept where reallocation should show clear benefits.",
   "_expected_outcome": "Reallocation should reduce completion time by recognizing optimal diagonal assignment immediately",
   
-  "N": 4,
-  "Ncmd": 4,
+  "N": 0,
+  "Ncmd": 0,
   "test": "default",
   "solver": "qpoases",
   
   "simulation_duration": 60,
-  "output_trajectories_paths": [
-    "../results/trajectories.txt",
-    "../../../SwarmSync/trajectories.txt"
-  ],
-  "output_goals_paths": [
-    "../results/goals.txt",
-    "../../../SwarmSync/goals.txt"
-  ],
+  "output_trajectories_paths": [],
+  "output_goals_paths": [],
 
-  "po": [
-    [0.0, 0.0, 1.0],
-    [4.0, 0.0, 1.0],
-    [4.0, 4.0, 1.0],
-    [0.0, 4.0, 1.0]
-  ],
-
-  "pf": [
-    [4.0, 4.0, 1.0],
-    [0.0, 4.0, 1.0],
-    [0.0, 0.0, 1.0],
-    [4.0, 0.0, 1.0]
-  ],
+  "po": [],
+  "pf": [],
 
   "d": 5,
   "num_segments": 3,
@@ -58,7 +41,7 @@
   "acc_cost": 0.015,
 
   "pmin": [-0.5, -0.5, 0.2],
-  "pmax": [4.5, 4.5, 2.0],
+  "pmax": [4.5, 4.5, 4.0],
   "amin": [-1.0, -1.0, -1.0],
   "amax": [1.0, 1.0, 1.0],
 
@@ -86,20 +69,20 @@
   "goal_region_is_region": false,
 
   "goal_circular_radius": 2.0,
-  "goal_circular_omega": 0.5,
+  "goal_circular_omega": 0.2,
   "goal_translation_velocity": 0.2,
 
   "reallocation_enabled": true,
   "reallocation_period": 2.0,
-  "_use_predictive": false,
+  "_use_predictive": true,
   "_prediction_horizon": 1.0,
 
   "collision_method": "on-demand",
-  "motion_type": "random_jump",
+  "motion_type": "static",
 
   "motion_type1": "circular",
   "motion_type2": "translating",
   "motion_type3": "circular_translating",
-  "motion_type4": "random_jump",
-  "motion_type5": "static"
+  "motion_type4": "static",
+  "motion_type5": "random_jump"
 }
