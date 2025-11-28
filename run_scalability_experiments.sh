@@ -7,19 +7,14 @@ echo "Script directory: $SCRIPT_DIR"
 
 cd $SCRIPT_DIR
 
-RUNS=2
-# SCALABILITY_SCENARIOS=(
-#     "scenario_scale_4" 
-#     "scenario_scale_8"   
-#     "scenario_scale_16"  
-#     "scenario_scale_32"
-#     "scenario_scale_64"
-#     "scenario_scale_128" 
-# )
-
+RUNS=3
 SCALABILITY_SCENARIOS=(
     "scenario_scale_4" 
-    "scenario_scale_8" 
+    "scenario_scale_8"   
+    "scenario_scale_16"  
+    "scenario_scale_32"
+    "scenario_scale_64"
+    "scenario_scale_128" 
 )
 
 # Creating results directory
