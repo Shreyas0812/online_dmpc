@@ -14,7 +14,6 @@ SCALABILITY_SCENARIOS=(
     "scenario_scale_16"  
     "scenario_scale_32"
     "scenario_scale_64"
-    "scenario_scale_128" 
 )
 
 # Creating results directory
