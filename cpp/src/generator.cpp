@@ -258,7 +258,7 @@ std::vector<MatrixXd> Generator::getNextInputs(const vector<State3D>& current_st
 
     for (int i = 0; i < _Ncmd; i++)
     {
-        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating") {
+        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating" || _motion_type == "random_jump") {
             _moving_goals[i] = computeGoalPosition(i, _current_time);
         } else {
             // Static goals (default)
@@ -458,7 +458,7 @@ void Generator::updateGoalCostTerms(int agent_id) {
         double future_time = _current_time + k * _h;
         VectorXd future_goal;
         
-        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating") {
+        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating" || _motion_type == "random_jump") {
             future_goal = computeGoalPosition(agent_id, future_time);
         } else {
             future_goal = _original_goals[agent_id];
