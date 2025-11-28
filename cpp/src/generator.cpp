@@ -4,6 +4,7 @@
 #include "iostream"
 #include "generator.h"
 #include <cmath>
+#include <random>
 
 using namespace std;
 using namespace Eigen;
@@ -614,7 +615,7 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
         
         return new_position;
     } 
-    else {  // "translating"
+    else if (_motion_type == "translating") {  // "translating"
         // Simple translation without rotation
         double translation_velocity_x = _goal_translation_velocity;  // Units per second from config
         double translation_velocity_y = 0.0;  // No Y movement for pure translation
@@ -635,6 +636,39 @@ Eigen::VectorXd Generator::computeGoalPosition(int agent_id, double time) {
         
         return new_position;
     }
+    else // random_jump
+    {
+        // Default: random walk every 5 seconds
+        const double random_walk_interval = 5.0;  // Change direction every 5 seconds
+        
+        // Determine if we should update the goal (at 5 second intervals)
+        int time_step = static_cast<int>(time / random_walk_interval);
+        
+        // Use a deterministic seed based on agent_id and time_step for repeatability
+        static std::mt19937 rng(42);  // Fixed seed for reproducibility
+        std::uniform_real_distribution<double> dist(-1.0, 1.0);
+        
+        // Create a unique seed for this agent and time step
+        unsigned int seed = agent_id * 1000 + time_step;
+        rng.seed(seed);
+        
+        // Generate random displacement vector
+        Eigen::VectorXd displacement(_dim);
+        for (int d = 0; d < _dim; d++) {
+            displacement(d) = dist(rng);
+        }
+        
+        // Normalize and scale the displacement
+        double step_size = _goal_translation_velocity * random_walk_interval;
+        displacement = step_size * displacement.normalized();
+        
+        // Add displacement to original goal position
+        Eigen::VectorXd new_position = _original_goals[agent_id] + displacement;
+        
+        _goal_regions[agent_id].center = new_position;
+        
+        return new_position;
+    }
 }
 
 MatrixXd Generator::computeGoalTrajectory(int agent_id, double start_time, int num_samples) {
@@ -644,7 +678,7 @@ MatrixXd Generator::computeGoalTrajectory(int agent_id, double start_time, int n
     for (int k = 0; k < num_samples; k++) {
         double sample_time = start_time + k * _Ts;
         
-        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating") {
+        if (_motion_type == "circular" || _motion_type == "circular_translating" || _motion_type == "translating" || _motion_type == "random_jump") {
             goal_trajectory.col(k) = computeGoalPosition(agent_id, sample_time);
         } else {
             goal_trajectory.col(k) = _original_goals[agent_id];
