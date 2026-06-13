@@ -11,11 +11,11 @@
   "simulation_duration": 60,
   "output_trajectories_paths": [
     "../results/trajectories.txt",
-    "../../../SwarmSync/trajectories.txt"
+    "../../../trajectories.txt"
   ],
   "output_goals_paths": [
     "../results/goals.txt",
-    "../../../SwarmSync/goals.txt"
+    "../../../goals.txt"
   ],
 
   "po": [
