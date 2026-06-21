@@ -41,10 +41,10 @@ Dependencies:
 
 ### Installation
 
-1. Initialize qpOASES submodule
+1. Initialize the bundled submodules (`qpOASES` and `hungarian-algorithm-cpp`)
 ```
 cd <path-to-repo>
-git submodule init && git submodule update
+git submodule update --init --recursive
 ```
 
 2. Build the project
