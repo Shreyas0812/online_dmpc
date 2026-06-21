@@ -95,8 +95,8 @@ This fork extends the original library with:
 - **Dynamic goal motion** — goals can move during simulation (circular, translating, random-jump, or combined)
 - **Online task reallocation** — Hungarian algorithm periodically re-solves the robot-to-goal assignment to minimize total travel distance
 - **9 curated test scenarios** — covering reallocation benefit cases, BVC vs on-demand collision avoidance, and moving goal tracking
-- **Scalability experiments** — automated sweep from 4 to 64 agents
-- **Python analysis pipeline** — metrics extraction, comparison figures, scalability plots
+- **Scalability experiments** — automated sweep from 4 to 64 agents (orchestration lives in the parent project)
+- **Python analysis pipeline** — metrics extraction, comparison figures, scalability plots (lives in the parent project, not this submodule)
 
 ### Key Changes to Existing Files
 
@@ -112,11 +112,12 @@ This fork extends the original library with:
 | `cpp/src/bvc_avoidance.cpp` | Explicit BVC collision avoidance |
 | `cpp/config/scenario_1-9.json` | 9 pre-configured test scenarios |
 | `cpp/config/scenario_scale_*.json` | Scalability configs (4–64 agents) |
-| `extract_metrics.py` | Aggregates experiment results |
-| `visualize_results.py` | Generates comparison figures |
-| `analyze_scalability.py` | Scalability analysis and plots |
-| `run_comprehensive_experiments.sh` | Batch runner for all 9 scenarios |
-| `run_scalability_experiments.sh` | Batch runner for scalability sweep |
+
+> **Note:** the batch experiment runners and Python analysis scripts
+> (`run_comprehensive_experiments.sh`, `run_scalability_experiments.sh`,
+> `extract_metrics.py`, `visualize_results.py`, `analyze_scalability.py`) were moved
+> **out of this submodule** into the parent project, since they orchestrate runs and
+> aggregate results across the whole project rather than belonging to the solver.
 
 ---
 
@@ -186,19 +187,21 @@ Set `"motion_type"` in config:
 
 ## Running Experiments
 
+The batch experiment runners and Python analysis pipeline
+(`run_comprehensive_experiments.sh`, `run_scalability_experiments.sh`,
+`extract_metrics.py`, `visualize_results.py`, `analyze_scalability.py`) live in the
+**parent project**, one level above this submodule — they orchestrate runs and
+aggregate results across the whole project, so they are not part of the solver.
+Run them from there.
+
+This submodule provides the solver itself; see [Scenarios](#scenarios) above to run a
+single scenario directly via `./bin/run`. For example:
+
 ```bash
-# From online_dmpc/
-
-# All 9 scenarios, static vs reallocation, 3 runs each
-bash run_comprehensive_experiments.sh
-
-# Scalability sweep: 4, 8, 16, 32, 64 agents
-bash run_scalability_experiments.sh
-
-# Aggregate and visualize
-python extract_metrics.py
-python visualize_results.py
-python analyze_scalability.py
+# from online_dmpc/cpp/build/  (after building — see Installation)
+./bin/run ../config/scenario_1.json   # run a specific scenario
+./bin/run                             # run the default config.json
 ```
 
-Figures are saved to `cpp/results/experiments/figures/`.
+This writes the solved trajectory to `cpp/results/trajectories.txt` (and
+`goals.txt`), which you can then visualize with the tooling in the parent project.
