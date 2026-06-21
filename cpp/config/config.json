@@ -10,12 +10,10 @@
   
   "simulation_duration": 60,
   "output_trajectories_paths": [
-    "../results/trajectories.txt",
-    "../../../trajectories.txt"
+    "../results/trajectories.txt"
   ],
   "output_goals_paths": [
-    "../results/goals.txt",
-    "../../../goals.txt"
+    "../results/goals.txt"
   ],
 
   "po": [
